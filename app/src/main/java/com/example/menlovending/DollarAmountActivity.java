@@ -11,11 +11,11 @@ public class DollarAmountActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dollar_amount);
 
-        // Get the dollar amount from the Intent
-        String dollarAmount = getIntent().getStringExtra("DOLLAR_AMOUNT");
+        // Retrieve the extra from the intent
+        double dollarAmount = getIntent().getDoubleExtra("DOLLAR_AMOUNT", 0.0);
 
-        // Find the TextView and set the dollar amount
+        // Display the dollarAmount (or handle it as needed)
         TextView amountTextView = findViewById(R.id.dollar_amount_text_view);
-        amountTextView.setText("$" + dollarAmount);
+        amountTextView.setText(String.format("$%.2f", dollarAmount));
     }
 }

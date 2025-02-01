@@ -27,11 +27,14 @@ import org.jetbrains.annotations.NotNull;
 
 public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_LOCATION = 1;
+    public static final int ITEM_COUNT = 16;
     private TextView displayTextView;
     private StringBuilder enteredCode = new StringBuilder();
+    private double[] prices = new double[ITEM_COUNT + 1];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        prices[1] = 3.50;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -146,8 +149,15 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             // Get the entered code (dollar amount)
-            String dollarAmount = "3.50";
-
+            int itemNum = Integer.parseInt(enteredCode.toString());
+            double dollarAmount;
+            if (itemNum > 0 && itemNum < ITEM_COUNT + 1) {
+                dollarAmount = prices[itemNum];
+            }
+            else {
+                displayTextView.setText("Invalid Item Number");
+                return;
+            }
             // Create an Intent to start the DollarAmountActivity
             Intent intent = new Intent(MainActivity.this, DollarAmountActivity.class);
             // Pass the dollar amount as an extra
