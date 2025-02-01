@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center_horizontal">
+
+    <!-- Display for the entered code -->
+    <TextView
+        android:id="@+id/display_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:layout_marginTop="60dp"
+        android:gravity="center"
+        android:text=""/>
+
+    <!-- Keypad Grid -->
+    <GridLayout
+        android:id="@+id/keypad_grid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:columnCount="3"
+        android:rowCount="4"
+        android:gravity="center_horizontal"
+        android:padding="8dp">
+    </GridLayout>
+
+</LinearLayout>
