@@ -1,6 +1,9 @@
 package com.example.menlovending;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,8 +17,12 @@ public class DollarAmountActivity extends AppCompatActivity {
         // Retrieve the extra from the intent
         double dollarAmount = getIntent().getDoubleExtra("DOLLAR_AMOUNT", 0.0);
 
-        // Display the dollarAmount (or handle it as needed)
+        // Display the dollarAmount
         TextView amountTextView = findViewById(R.id.dollar_amount_text_view);
         amountTextView.setText(String.format("$%.2f", dollarAmount));
+
+        // Handle the Back button
+        Button backButton = findViewById(R.id.back_button);
+        backButton.setOnClickListener(v -> finish()); // Ends current activity and returns to MainActivity
     }
 }
