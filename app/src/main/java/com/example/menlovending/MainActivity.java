@@ -16,9 +16,18 @@ import android.view.View;
 import android.widget.Button;
 import android.Manifest;
 
+import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
+import com.stripe.model.terminal.ConnectionToken;
+import com.stripe.param.PaymentIntentCreateParams;
+import com.stripe.param.terminal.ConnectionTokenCreateParams;
 import com.stripe.stripeterminal.Terminal;
+import com.stripe.stripeterminal.external.callable.Cancelable;
+import com.stripe.stripeterminal.external.callable.PaymentIntentCallback;
 import com.stripe.stripeterminal.external.callable.TerminalListener;
 import com.stripe.stripeterminal.external.models.ConnectionStatus;
+import com.stripe.stripeterminal.external.models.PaymentIntent;
+import com.stripe.stripeterminal.external.models.PaymentIntentParameters;
 import com.stripe.stripeterminal.external.models.PaymentStatus;
 import com.stripe.stripeterminal.external.models.TerminalException;
 import com.stripe.stripeterminal.log.LogLevel;
@@ -31,9 +40,12 @@ public class MainActivity extends AppCompatActivity {
     private TextView displayTextView;
     private StringBuilder enteredCode = new StringBuilder();
     private double[] prices = new double[ITEM_COUNT + 1];
+    private Terminal terminal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        terminal = Terminal.getInstance();
+
         prices[1] = 3.50;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -78,58 +90,6 @@ public class MainActivity extends AppCompatActivity {
         keypadGrid.addView(enterButton);
 
     }
-
-//    @Override
-//    public void onRequestPermissionsResult(
-//            int requestCode,
-//            @NotNull String[] permissions,
-//            @NotNull int[] grantResults
-//    ) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//
-//        if (requestCode == REQUEST_CODE_LOCATION && grantResults.length > 0 &&
-//                grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-//            throw new RuntimeException("Location services are required in order to connect to a reader.");
-//        }
-//    }
-//
-//    private void createTerminalListener() throws TerminalException {
-//        // Make sure ACCESS_FINE_LOCATION is initialized in terminal app
-//        if (ContextCompat.checkSelfPermission(getActivity(),
-//                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            String[] permissions = {
-//                    android.Manifest.permission.ACCESS_FINE_LOCATION
-//            };
-//            ActivityCompat.requestPermissions(getActivity(), permissions, REQUEST_CODE_LOCATION);
-//        }
-//        // Create your listener object. Override any methods that you want to be notified about
-//        TerminalListener listener = new TerminalListener() {
-//            @Override
-//            public void onConnectionStatusChange(ConnectionStatus status) {
-//                System.out.printf("onConnectionStatusChange: %s\n", status);
-//            }
-//
-//            @Override
-//            public void onPaymentStatusChange(PaymentStatus status) {
-//                System.out.printf("onPaymentStatusChange: %s\n ", status);
-//            }
-//        };
-//
-//        // Choose the level of messages that should be logged to your console
-//        LogLevel logLevel = LogLevel.VERBOSE;
-//
-//        // Create your token provider.
-//        CustomConnectionTokenProvider tokenProvider = new CustomConnectionTokenProvider();
-//
-//        // Pass in the current application context, your desired logging level, your token provider, and the listener you created
-//        if (!Terminal.isInitialized()) {
-//            Terminal.initTerminal(getApplicationContext(), logLevel, tokenProvider, listener);
-//        }
-//
-//        // Since the Terminal is a singleton, you can call getInstance whenever you need it
-//        Terminal.getInstance();
-//    }
-
     private class NumberClickListener implements View.OnClickListener {
         private final int number;
 
@@ -143,7 +103,19 @@ public class MainActivity extends AppCompatActivity {
             updateDisplay();
         }
     }
+    private class Server {
+        private void requestPayment() {
+            PaymentIntentCreateParams params =
+                    PaymentIntentCreateParams.builder()
+                            .setCurrency("usd")
+                            .addPaymentMethodType("card_present")
+                            .setCaptureMethod(PaymentIntentCreateParams.CaptureMethod.MANUAL)
+                            .setAmount(1000L)
+                            .build();
 
+            PaymentIntent paymentIntent = PaymentIntent.create(params);
+        }
+    }
     private class EnterClickListener implements View.OnClickListener {
 
         @Override

@@ -41,8 +41,9 @@ android {
 
 dependencies {
     // Stripe SDK for Android
-    implementation("com.stripe:stripe-android:20.32.0")
-    implementation("com.stripe:stripeterminal:4.1.0")
+    implementation("com.stripe:stripe-android:21.3.2")
+    implementation(libs.stripeterminal)
+    implementation(libs.stripe.java)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
