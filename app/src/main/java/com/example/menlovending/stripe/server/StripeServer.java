@@ -10,7 +10,7 @@ import com.stripe.param.terminal.ConnectionTokenCreateParams;
 public class StripeServer {
 
     // Stripe API key (DO NOT COMMIT THIS, REPLACE WITH ENVIRONMENT VARIABLE)
-    private static final String STRIPE_API_KEY = "EXAMPLE TOKEN";
+    private static final String STRIPE_API_KEY = "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";
 
     // Instance
     private static final StripeServer INSTANCE = new StripeServer();
