@@ -3,8 +3,15 @@ package com.example.menlovending;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.stripe.stripeterminal.external.callable.DiscoveryListener;
+import com.stripe.stripeterminal.external.callable.MobileReaderListener;
+import com.stripe.stripeterminal.external.models.DiscoveryConfiguration;
+import com.stripe.stripeterminal.external.models.ReaderDisplayMessage;
+import com.stripe.stripeterminal.external.models.ReaderInputOptions;
 
 public class DollarAmountActivity extends AppCompatActivity {
     @Override
@@ -23,4 +30,6 @@ public class DollarAmountActivity extends AppCompatActivity {
         Button backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(v -> finish()); // Ends current activity and returns to MainActivity
     }
+
 }
+

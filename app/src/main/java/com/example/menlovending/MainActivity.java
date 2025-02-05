@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        terminal = Terminal.getInstance();
+//        terminal = Terminal.getInstance();
 
         prices[1] = 3.50;
         super.onCreate(savedInstanceState);
@@ -103,19 +103,18 @@ public class MainActivity extends AppCompatActivity {
             updateDisplay();
         }
     }
-    private class Server {
-        private void requestPayment() {
-            PaymentIntentCreateParams params =
-                    PaymentIntentCreateParams.builder()
-                            .setCurrency("usd")
-                            .addPaymentMethodType("card_present")
-                            .setCaptureMethod(PaymentIntentCreateParams.CaptureMethod.MANUAL)
-                            .setAmount(1000L)
-                            .build();
-
-            PaymentIntent paymentIntent = PaymentIntent.create(params);
-        }
-    }
+//    private class Server {
+//        private void requestPayment() {
+//            PaymentIntentCreateParams params =
+//                    PaymentIntentCreateParams.builder()
+//                            .setCurrency("usd")
+//                            .addPaymentMethodType("card_present")
+//                            .setCaptureMethod(PaymentIntentCreateParams.CaptureMethod.MANUAL)
+//                            .setAmount(1000L)
+//                            .build();
+//
+//        }
+//    }
     private class EnterClickListener implements View.OnClickListener {
 
         @Override
