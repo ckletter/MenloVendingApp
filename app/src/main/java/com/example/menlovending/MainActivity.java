@@ -103,18 +103,6 @@ public class MainActivity extends AppCompatActivity {
             updateDisplay();
         }
     }
-//    private class Server {
-//        private void requestPayment() {
-//            PaymentIntentCreateParams params =
-//                    PaymentIntentCreateParams.builder()
-//                            .setCurrency("usd")
-//                            .addPaymentMethodType("card_present")
-//                            .setCaptureMethod(PaymentIntentCreateParams.CaptureMethod.MANUAL)
-//                            .setAmount(1000L)
-//                            .build();
-//
-//        }
-//    }
     private class EnterClickListener implements View.OnClickListener {
 
         @Override
