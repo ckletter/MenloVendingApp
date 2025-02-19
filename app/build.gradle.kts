@@ -41,6 +41,8 @@ android {
 
 dependencies {
     // Stripe SDK for Android
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.inline)
     implementation(libs.stripe.android)
     androidTestImplementation(libs.androidx.core)
     androidTestImplementation(libs.androidx.junit.v114)
