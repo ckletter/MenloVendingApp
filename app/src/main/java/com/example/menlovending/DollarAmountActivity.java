@@ -55,31 +55,31 @@ public class DollarAmountActivity extends AppCompatActivity implements MobileRea
                         mobileReaderListener
                 );
 
-        Terminal.getInstance().connectReader(
-                selectedReader,
-                connectionConfig,
-                new ReaderCallback() {
-                    @Override
-                    public void onSuccess(@NotNull Reader reader) {
-                        // Placeholder for handling successful operation
-                    }
-
-                    @Override
-                    public void onFailure(@NotNull TerminalException e) {
-                        // Placeholder for handling exception
-                    }
-                }
-        );
+//        Terminal.getInstance().connectReader(
+//                selectedReader,
+//                connectionConfig,
+//                new ReaderCallback() {
+//                    @Override
+//                    public void onSuccess(@NotNull Reader reader) {
+//                        // Placeholder for handling successful operation
+//                    }
+//
+//                    @Override
+//                    public void onFailure(@NotNull TerminalException e) {
+//                        // Placeholder for handling exception
+//                    }
+//                }
+//        );
     }
     @Override
     public void onRequestReaderInput(ReaderInputOptions options) {
         // Placeholder for updating your app's checkout UI
-        Toast.makeText(getActivity(), options.toString(), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getActivity(), options.toString(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onRequestReaderDisplayMessage(ReaderDisplayMessage message) {
-        Toast.makeText(getActivity(), message.toString(), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getActivity(), message.toString(), Toast.LENGTH_SHORT).show();
     }
 }
 

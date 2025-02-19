@@ -72,7 +72,7 @@ public class DiscoverReadersActivity extends AppCompatActivity implements Discov
         // Create an Intent to start the DollarAmountActivity
         Intent intent = new Intent(DiscoverReadersActivity.this, DollarAmountActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList("readers", (ArrayList<Reader>) readers);
+//        bundle.putParcelableArrayList("readers", (ArrayList<Reader>) readers);
         intent.putExtras(bundle);
         startActivity(intent);
     }

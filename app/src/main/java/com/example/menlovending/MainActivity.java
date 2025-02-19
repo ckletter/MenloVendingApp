@@ -35,16 +35,13 @@ import com.stripe.stripeterminal.log.LogLevel;
 import org.jetbrains.annotations.NotNull;
 
 public class MainActivity extends AppCompatActivity {
-    private static final int REQUEST_CODE_LOCATION = 1;
     public static final int ITEM_COUNT = 16;
     private TextView displayTextView;
     private StringBuilder enteredCode = new StringBuilder();
     private double[] prices = new double[ITEM_COUNT + 1];
-    private Terminal terminal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        terminal = Terminal.getInstance();
 
         prices[1] = 3.50;
         super.onCreate(savedInstanceState);

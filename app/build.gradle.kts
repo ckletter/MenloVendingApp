@@ -42,6 +42,10 @@ android {
 dependencies {
     // Stripe SDK for Android
     implementation(libs.stripe.android)
+    androidTestImplementation(libs.androidx.core)
+    androidTestImplementation(libs.androidx.junit.v114)
+    androidTestImplementation(libs.androidx.espresso.core.v350)
+    implementation(libs.jserialcomm)
     implementation(libs.stripeterminal)
     implementation(libs.stripe.java)
     implementation(libs.androidx.core.ktx)
