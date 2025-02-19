@@ -21,8 +21,6 @@ public class StripeTerminalApplication extends Application {
     }
     public void connectToStripe() throws StripeException {
         StripeServer server = StripeServer.getInstance();
-//        TokenProvider tokenProvider = new TokenProvider();
-//        tokenProvider.fetchConnectionToken();
         String id = server.createPaymentIntent(1L);
         Terminal.getInstance().retrievePaymentIntent(server.getConnectionToken(), new PaymentIntentCallback() {
             @Override

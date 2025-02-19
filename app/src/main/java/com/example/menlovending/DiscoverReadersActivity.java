@@ -67,13 +67,16 @@ public class DiscoverReadersActivity extends AppCompatActivity implements Discov
 
     @Override
     public void onUpdateDiscoveredReaders(@NotNull List<Reader> readers) {
-        // In your app, display the discovered reader(s) to the user.
-        // Call `connectReader` after the user selects a reader to connect to.
-        // Create an Intent to start the DollarAmountActivity
+        if (readers.isEmpty()) {
+            return;
+        }
+
+        // Select the first reader for now (or prompt the user to select one)
+        Reader selectedReader = readers.get(0);
+
+        // Pass only the serial number or any other necessary information
         Intent intent = new Intent(DiscoverReadersActivity.this, DollarAmountActivity.class);
-        Bundle bundle = new Bundle();
-//        bundle.putParcelableArrayList("readers", (ArrayList<Reader>) readers);
-        intent.putExtras(bundle);
+        intent.putExtra("reader_serial", selectedReader.getSerialNumber());
         startActivity(intent);
     }
 
