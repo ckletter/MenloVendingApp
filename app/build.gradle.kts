@@ -40,6 +40,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.firebase.database)
     // Stripe SDK for Android
     testImplementation(libs.mockito.core)
     testImplementation(libs.mockito.inline)

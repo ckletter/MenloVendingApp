@@ -18,6 +18,7 @@ mockitoInline = "4.0.0"
 stripeAndroid = "21.3.2"
 stripeJava = "28.3.0"
 stripeterminal = "4.1.0"
+firebaseDatabase = "21.0.0"
 
 [libraries]
 androidx-core = { module = "androidx.test:core", version.ref = "core" }
@@ -44,6 +45,7 @@ mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockito
 stripe-android = { module = "com.stripe:stripe-android", version.ref = "stripeAndroid" }
 stripe-java = { module = "com.stripe:stripe-java", version.ref = "stripeJava" }
 stripeterminal = { module = "com.stripe:stripeterminal", version.ref = "stripeterminal" }
+firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

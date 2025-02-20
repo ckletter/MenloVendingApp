@@ -35,13 +35,15 @@ public class DollarAmountActivity extends AppCompatActivity implements MobileRea
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dollar_amount);
         // Retrieve the extra from the intent
-//        double dollarAmount = getIntent().getDoubleExtra("DOLLAR_AMOUNT", 0.0);
+        double dollarAmount = getIntent().getDoubleExtra("DOLLAR_AMOUNT", 0.0);
 
         String readerSerial = getIntent().getStringExtra("reader_serial");
 
         if (readerSerial != null) {
             selectedReader = findReaderBySerial(readerSerial);
         }
+        connectToReader();
+        System.out.println("Connected to reader!");
 
         // Display the dollarAmount
         TextView amountTextView = findViewById(R.id.dollar_amount_text_view);

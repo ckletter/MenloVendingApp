@@ -114,8 +114,8 @@ public class MainActivity extends AppCompatActivity {
                 displayTextView.setText("Invalid Item Number");
                 return;
             }
-            // Create an Intent to start the DollarAmountActivity
-            Intent intent = new Intent(MainActivity.this, DollarAmountActivity.class);
+            // Create an Intent to start the DiscoverReadersActivity
+            Intent intent = new Intent(MainActivity.this, DiscoverReadersActivity.class);
             // Pass the dollar amount as an extra
             intent.putExtra("DOLLAR_AMOUNT", dollarAmount);
 
