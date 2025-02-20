@@ -1,4 +1,7 @@
 package com.example.menlovending.stripe.server;
+import com.example.menlovending.BuildConfig;
+
+import android.util.Log;
 
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
@@ -10,7 +13,7 @@ import com.stripe.param.terminal.ConnectionTokenCreateParams;
 public class StripeServer {
 
     // Stripe API key
-    private static final String STRIPE_API_KEY = System.getenv("STRIPE_API_KEY");
+    private static final String STRIPE_API_KEY = BuildConfig.STRIPE_API_KEY;
 
     // Instance
     private static final StripeServer INSTANCE = new StripeServer();
@@ -46,6 +49,10 @@ public class StripeServer {
 
     // Constructor
     private StripeServer() {
+        if (STRIPE_API_KEY == null || STRIPE_API_KEY.isEmpty()) {
+            Log.e("StripeServer", "api key not set");
+            throw new IllegalStateException("Stripe API key is not set. Please set STRIPE_API_KEY environment variable.");
+        }
         Stripe.apiKey = STRIPE_API_KEY;
     }
 }

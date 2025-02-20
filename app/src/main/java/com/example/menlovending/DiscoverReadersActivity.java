@@ -24,6 +24,8 @@ import com.stripe.stripeterminal.external.models.TerminalException;
 
 import com.stripe.stripeterminal.external.callable.DiscoveryListener;
 import com.stripe.stripeterminal.external.models.Reader;
+import com.stripe.stripeterminal.log.LogLevel;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -49,7 +51,7 @@ public class DiscoverReadersActivity extends AppCompatActivity implements Discov
             try {
                 Terminal.initTerminal(
                         getApplicationContext(),
-                        Terminal.LoggingLevel.VERBOSE,
+                        LogLevel.VERBOSE,
                         new TokenProvider(),
                         new TerminalEventListener()
                 );
@@ -64,15 +66,10 @@ public class DiscoverReadersActivity extends AppCompatActivity implements Discov
         DiscoveryConfiguration.UsbDiscoveryConfiguration config = new DiscoveryConfiguration.UsbDiscoveryConfiguration(timeout, isSimulated);
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+            Log.e("DiscoverReadersActivity", "Permission not granted");
             return;
         }
+        Log.d("DiscoverReadersActivity", "Discovering reader.");
         discoverCancelable = Terminal.getInstance().discoverReaders(
                 config,
                 this,
