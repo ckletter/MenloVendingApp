@@ -96,6 +96,7 @@ public class DiscoverReadersActivity extends AppCompatActivity implements Discov
 
         // Select the first reader for now (or prompt the user to select one)
         Reader selectedReader = readers.get(0);
+        ReaderManager.getInstance().setReaders(new ArrayList<>(readers));
 
         // Pass only the serial number or any other necessary information
         Intent intent = new Intent(DiscoverReadersActivity.this, DollarAmountActivity.class);

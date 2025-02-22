@@ -38,7 +38,7 @@ public class StripeServer {
                 .build();
 
         PaymentIntent intent = PaymentIntent.create(createParams);
-        return intent.getId();
+        return intent.getClientSecret();
     }
 
     public String capturePaymentIntent(String paymentIntentId) throws StripeException {

@@ -9,6 +9,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.example.menlovending.stripe.client.StripeTerminalApplication;
+import com.stripe.exception.StripeException;
 import com.stripe.stripeterminal.Terminal;
 import com.stripe.stripeterminal.external.callable.Callback;
 import com.stripe.stripeterminal.external.callable.Cancelable;
@@ -52,6 +54,12 @@ public class DollarAmountActivity extends AppCompatActivity implements MobileRea
         // Handle the Back button
         Button backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(v -> finish()); // Ends current activity and returns to MainActivity
+
+        try {
+            StripeTerminalApplication.connectToStripe();
+        } catch (StripeException e) {
+            throw new RuntimeException(e);
+        }
     }
     private Reader findReaderBySerial(String serialNumber) {
         for (Reader reader : ReaderManager.getInstance().getReaders()) {
@@ -67,7 +75,7 @@ public class DollarAmountActivity extends AppCompatActivity implements MobileRea
 
         ConnectionConfiguration.UsbConnectionConfiguration connectionConfig =
                 new ConnectionConfiguration.UsbConnectionConfiguration(
-                        "{{LOCATION_ID}}",
+                        "tml_F7bq7AIbAxOcso",
                         autoReconnectOnUnexpectedDisconnect,
                         mobileReaderListener
                 );
