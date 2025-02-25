@@ -6,9 +6,11 @@ val localProperties = Properties().apply {
 }
 
 val stripeApiKey = localProperties.getProperty("STRIPE_API_KEY", "")
+val stripeLocation = localProperties.getProperty("STRIPE_LOCATION", "")
 
 gradle.rootProject {
     extensions.extraProperties["stripeApiKey"] = stripeApiKey
+    extensions.extraProperties["stripeLocation"] = stripeLocation
 }
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.

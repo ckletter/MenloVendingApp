@@ -21,6 +21,7 @@ android {
     buildTypes {
         debug {
             buildConfigField("String", "STRIPE_API_KEY", "\"${rootProject.extra["stripeApiKey"]}\"")
+            buildConfigField("String", "STRIPE_LOCATION", "\"${rootProject.extra["stripeLocation"]}\"")
         }
         release {
             isMinifyEnabled = false
@@ -29,6 +30,7 @@ android {
                 "proguard-rules.pro"
             )
             buildConfigField("String", "STRIPE_API_KEY", "\"${rootProject.extra["stripeApiKey"]}\"")
+            buildConfigField("String", "STRIPE_LOCATION", "\"${rootProject.extra["stripeLocation"]}\"")
         }
     }
     compileOptions {

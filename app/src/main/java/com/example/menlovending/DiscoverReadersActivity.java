@@ -63,7 +63,7 @@ public class DiscoverReadersActivity extends AppCompatActivity implements Discov
         int timeout = 0;
         boolean isSimulated = false;
 
-        DiscoveryConfiguration.UsbDiscoveryConfiguration config = new DiscoveryConfiguration.UsbDiscoveryConfiguration(timeout, isSimulated);
+        DiscoveryConfiguration.BluetoothDiscoveryConfiguration config = new DiscoveryConfiguration.BluetoothDiscoveryConfiguration(timeout, isSimulated);
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Log.e("DiscoverReadersActivity", "Permission not granted");

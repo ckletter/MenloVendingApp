@@ -4,6 +4,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
+import com.example.menlovending.BuildConfig;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -56,7 +57,7 @@ public class DollarAmountActivity extends AppCompatActivity implements MobileRea
         backButton.setOnClickListener(v -> finish()); // Ends current activity and returns to MainActivity
 
         try {
-            StripeTerminalApplication.connectToStripe();
+            StripeTerminalApplication.processPayment();
         } catch (StripeException e) {
             throw new RuntimeException(e);
         }
@@ -73,9 +74,9 @@ public class DollarAmountActivity extends AppCompatActivity implements MobileRea
         MobileReaderListener mobileReaderListener = this;
         boolean autoReconnectOnUnexpectedDisconnect = true;
 
-        ConnectionConfiguration.UsbConnectionConfiguration connectionConfig =
-                new ConnectionConfiguration.UsbConnectionConfiguration(
-                        "tml_F7bq7AIbAxOcso",
+        ConnectionConfiguration.BluetoothConnectionConfiguration connectionConfig =
+                new ConnectionConfiguration.BluetoothConnectionConfiguration(
+                        BuildConfig.STRIPE_LOCATION,
                         autoReconnectOnUnexpectedDisconnect,
                         mobileReaderListener
                 );

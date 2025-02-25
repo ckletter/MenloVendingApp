@@ -23,7 +23,7 @@ public class StripeTerminalApplication extends Application {
         super.onCreate();
         TerminalApplicationDelegate.onCreate(this);
     }
-    public static void connectToStripe() throws StripeException {
+    public static void processPayment() throws StripeException {
         StripeServer server = StripeServer.getInstance();
 
         PaymentIntentParameters params = new PaymentIntentParameters.Builder()

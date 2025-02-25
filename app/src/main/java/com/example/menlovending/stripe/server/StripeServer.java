@@ -54,5 +54,7 @@ public class StripeServer {
             throw new IllegalStateException("Stripe API key is not set. Please set STRIPE_API_KEY environment variable.");
         }
         Stripe.apiKey = STRIPE_API_KEY;
+        Log.d("StripeServer", "Using API Key: " + STRIPE_API_KEY);
+
     }
 }
