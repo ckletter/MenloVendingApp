@@ -4,6 +4,7 @@ import android.app.Application;
 
 import androidx.annotation.NonNull;
 
+import com.example.menlovending.stripe.manager.MenloVendingManager;
 import com.example.menlovending.stripe.server.StripeServer;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
@@ -21,6 +22,7 @@ public class StripeTerminalApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        MenloVendingManager.getInstance();
         TerminalApplicationDelegate.onCreate(this);
     }
     public static void processPayment() throws StripeException {

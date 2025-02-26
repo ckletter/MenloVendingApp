@@ -43,6 +43,7 @@ public class MenloVendingManager implements DiscoveryListener {
 
     public void initialize(Context context) {
         executorService.execute(() -> {
+//            MenloVendingState.MenloVendingState(MenloVendingState.MenloVendingStatus.INITIALIZING, "Initializing...", "");
             connectionStatus = ConnectionStatus.NOT_CONNECTED;
             paymentStatus = PaymentStatus.NOT_READY;
             if (context != null) {

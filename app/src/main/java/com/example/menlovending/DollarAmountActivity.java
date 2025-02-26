@@ -2,6 +2,7 @@ package com.example.menlovending;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import com.example.menlovending.BuildConfig;
@@ -46,7 +47,6 @@ public class DollarAmountActivity extends AppCompatActivity implements MobileRea
             selectedReader = findReaderBySerial(readerSerial);
         }
         connectToReader();
-        System.out.println("Connected to reader!");
 
         // Display the dollarAmount
         TextView amountTextView = findViewById(R.id.dollar_amount_text_view);
@@ -71,6 +71,7 @@ public class DollarAmountActivity extends AppCompatActivity implements MobileRea
         return null; // Return null if the reader is not found
     }
     public void connectToReader() {
+        Log.d("DollarAmountActivity", "Connecting to reader...");
         MobileReaderListener mobileReaderListener = this;
         boolean autoReconnectOnUnexpectedDisconnect = true;
 
@@ -87,13 +88,12 @@ public class DollarAmountActivity extends AppCompatActivity implements MobileRea
                 new ReaderCallback() {
                     @Override
                     public void onSuccess(@NotNull Reader reader) {
-                        // Placeholder for handling successful operation
+                        Log.d("DollarAmountActivity", "Connected to reader: " + reader.getSerialNumber());
                     }
 
                     @Override
                     public void onFailure(@NotNull TerminalException e) {
-                        // Placeholder for handling exception
-                    }
+                        Log.e("DollarAmountActivity", "Failed to connect to reader: " + e.getMessage());                    }
                 }
         );
     }
