@@ -48,26 +48,26 @@ public class StripeTerminalApplication extends Application {
                                         try {
                                             server.capturePaymentIntent(id);
                                         } catch (StripeException e) {
-                                            throw new RuntimeException(e);
+                                            MenloVendingManager.getInstance().fatalStatus("Failed to capture payment", "Unknown Error");
                                         }
                                     }
 
                                     @Override
                                     public void onFailure(@NotNull TerminalException exception) {
-                                        // Placeholder for handling exception
+                                        MenloVendingManager.getInstance().fatalStatus("Failed to confirm payment", "Unknown Error");
                                     }
                                 });
                             }
 
                             @Override
                             public void onFailure(@NotNull TerminalException exception) {
-                                // Placeholder for handling exception
+                                MenloVendingManager.getInstance().fatalStatus("Failed to collect payment", "Unknown Error");
                             }
                         });
                     }
                     @Override
                     public void onFailure(@NonNull TerminalException e) {
-
+                        MenloVendingManager.getInstance().fatalStatus("Failed to create payment intent", "Unknown Error");
                     }
                 }
         );

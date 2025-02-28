@@ -41,13 +41,6 @@ public class DollarAmountActivity extends AppCompatActivity implements MobileRea
         // Retrieve the extra from the intent
         double dollarAmount = getIntent().getDoubleExtra("DOLLAR_AMOUNT", 0.0);
 
-        String readerSerial = getIntent().getStringExtra("reader_serial");
-
-        if (readerSerial != null) {
-            selectedReader = findReaderBySerial(readerSerial);
-        }
-        connectToReader();
-
         // Display the dollarAmount
         TextView amountTextView = findViewById(R.id.dollar_amount_text_view);
         amountTextView.setText(String.format("$%.2f", dollarAmount));
@@ -61,41 +54,6 @@ public class DollarAmountActivity extends AppCompatActivity implements MobileRea
         } catch (StripeException e) {
             throw new RuntimeException(e);
         }
-    }
-    private Reader findReaderBySerial(String serialNumber) {
-        for (Reader reader : ReaderManager.getInstance().getReaders()) {
-            if (reader.getSerialNumber().equals(serialNumber)) {
-                return reader;
-            }
-        }
-        return null; // Return null if the reader is not found
-    }
-    public void connectToReader() {
-        Log.d("DollarAmountActivity", "Connecting to reader...");
-        MobileReaderListener mobileReaderListener = this;
-        boolean autoReconnectOnUnexpectedDisconnect = true;
-
-        ConnectionConfiguration.BluetoothConnectionConfiguration connectionConfig =
-                new ConnectionConfiguration.BluetoothConnectionConfiguration(
-                        BuildConfig.STRIPE_LOCATION,
-                        autoReconnectOnUnexpectedDisconnect,
-                        mobileReaderListener
-                );
-
-        Terminal.getInstance().connectReader(
-                selectedReader,
-                connectionConfig,
-                new ReaderCallback() {
-                    @Override
-                    public void onSuccess(@NotNull Reader reader) {
-                        Log.d("DollarAmountActivity", "Connected to reader: " + reader.getSerialNumber());
-                    }
-
-                    @Override
-                    public void onFailure(@NotNull TerminalException e) {
-                        Log.e("DollarAmountActivity", "Failed to connect to reader: " + e.getMessage());                    }
-                }
-        );
     }
     @Override
     public void onRequestReaderInput(ReaderInputOptions options) {

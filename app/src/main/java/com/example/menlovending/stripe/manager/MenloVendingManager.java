@@ -169,7 +169,7 @@ public class MenloVendingManager implements DiscoveryListener {
 
         }
     }
-    private void fatalStatus(String message, String details) {
+    public void fatalStatus(String message, String details) {
         menloVendingState = new MenloVendingState(MenloVendingState.MenloVendingStatus.FATAL, message, details);
     }
 }

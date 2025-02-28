@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
             // Create an Intent to start the DiscoverReadersActivity
-            Intent intent = new Intent(MainActivity.this, DiscoverReadersActivity.class);
+            Intent intent = new Intent(MainActivity.this, DollarAmountActivity.class);
             // Pass the dollar amount as an extra
             intent.putExtra("DOLLAR_AMOUNT", dollarAmount);
 
