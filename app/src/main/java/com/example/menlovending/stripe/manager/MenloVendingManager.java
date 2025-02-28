@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import com.example.menlovending.stripe.client.ReaderListener;
 import com.example.menlovending.stripe.client.ReaderUpdate;
@@ -34,6 +35,7 @@ public class MenloVendingManager implements DiscoveryListener {
     private ConnectionStatus connectionStatus = ConnectionStatus.NOT_CONNECTED;
     private PaymentStatus paymentStatus = PaymentStatus.NOT_READY;
     private Cancelable discoverCancelable;
+    private MenloVendingState menloVendingState;
 
     private MenloVendingManager() {}
 
@@ -43,7 +45,7 @@ public class MenloVendingManager implements DiscoveryListener {
 
     public void initialize(Context context) {
         executorService.execute(() -> {
-//            MenloVendingState.MenloVendingState(MenloVendingState.MenloVendingStatus.INITIALIZING, "Initializing...", "");
+            menloVendingState = new MenloVendingState(MenloVendingState.MenloVendingStatus.INITIALIZING, "Initializing...", "");
             connectionStatus = ConnectionStatus.NOT_CONNECTED;
             paymentStatus = PaymentStatus.NOT_READY;
             if (context != null) {
@@ -109,13 +111,12 @@ public class MenloVendingManager implements DiscoveryListener {
                     new ReaderCallback() {
                         @Override
                         public void onSuccess(Reader reader) {
-                            System.out.println("Connected to reader");
+                            Log.d("Manager", "Connected to reader");
                         }
 
                         @Override
                         public void onFailure(TerminalException e) {
-                            System.out.println("Failed to connect to reader: " + e.getMessage());
-//                            retryInitialization();
+                            fatalStatus("Failed to connect to reader", e.getMessage());
                         }
                     }
             );
@@ -124,26 +125,51 @@ public class MenloVendingManager implements DiscoveryListener {
 
     private void onReconnectStarted() {
         System.out.println("Reconnecting to Stripe Terminal...");
+        menloVendingState = new MenloVendingState(MenloVendingState.MenloVendingStatus.INITIALIZING, "Reconnecting to Stripe Terminal...", "");
     }
 
     private void onReconnectSucceeded() {
-        System.out.println("Reconnected to Stripe Terminal");
+        Log.d("Manager", "Reconnected to Stripe Terminal");
+        menloVendingState = new MenloVendingState(MenloVendingState.MenloVendingStatus.READY, "Reconnected to Stripe Terminal", "");
     }
 
     private void onReconnectFailed() {
-        System.out.println("Failed to reconnect to Stripe Terminal");
+        Log.d("Manager", "Failed to reconnect to Stripe Terminal");
+        fatalStatus("Failed to reconnect to Stripe Terminal", "Unknown Error");
 //        retryInitialization();
     }
 
     private void onSoftwareUpdate(ReaderUpdate updateProgress) {
         if (updateProgress.isUpdating()) {
-            System.out.println("Updating Stripe Terminal (" + Math.round(updateProgress.getProgress() * 100) + "%)");
+            menloVendingState = new MenloVendingState(MenloVendingState.MenloVendingStatus.INITIALIZING, "Updating Stripe Terminal (" + Math.round(updateProgress.getProgress() * 100) + "%)", "Progress: " + Math.round(updateProgress.getProgress() * 100) + "%");
         } else {
             System.out.println("Updated Stripe Terminal");
+            menloVendingState = new MenloVendingState(MenloVendingState.MenloVendingStatus.READY, "Updated Stripe Terminal", "");
         }
     }
-//
-//    private void retryInitialization() {
-//        new Handler(Looper.getMainLooper()).postDelayed(this::initialize, 15000);
-//    }
+    // Global Status Update
+    private void updateStatus() {
+        // Check connection status (switch)
+        if (connectionStatus == ConnectionStatus.NOT_CONNECTED) {
+            menloVendingState = new MenloVendingState(MenloVendingState.MenloVendingStatus.ERROR,
+                    "Disconnected from Stripe Terminal", "");
+        }
+        else if (connectionStatus == ConnectionStatus.CONNECTING) {
+            menloVendingState = new MenloVendingState(MenloVendingState.MenloVendingStatus.INITIALIZING,
+                    "Connecting to Stripe Terminal...", "");
+        }
+        else if (connectionStatus == ConnectionStatus.CONNECTED) {
+            menloVendingState = new MenloVendingState(MenloVendingState.MenloVendingStatus.READY,
+                    "Connected to Stripe Terminal", "");
+
+        }
+        else if (connectionStatus == ConnectionStatus.DISCOVERING) {
+            menloVendingState = new MenloVendingState(MenloVendingState.MenloVendingStatus.INITIALIZING,
+                    "Searching for Stripe Terminal...", "");
+
+        }
+    }
+    private void fatalStatus(String message, String details) {
+        menloVendingState = new MenloVendingState(MenloVendingState.MenloVendingStatus.FATAL, message, details);
+    }
 }

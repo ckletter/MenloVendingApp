@@ -8,7 +8,7 @@ import com.stripe.stripeterminal.external.models.Reader;
 import com.stripe.stripeterminal.external.models.ReaderSoftwareUpdate;
 import com.stripe.stripeterminal.external.models.TerminalException;
 
-private class ReaderUpdate {
+public class ReaderUpdate {
     private final boolean isUpdating;
     private final float progress;
 

@@ -22,7 +22,7 @@ public class StripeTerminalApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        MenloVendingManager.getInstance();
+        MenloVendingManager.getInstance().initialize(this);
         TerminalApplicationDelegate.onCreate(this);
     }
     public static void processPayment() throws StripeException {
