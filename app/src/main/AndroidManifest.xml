@@ -30,7 +30,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".DollarAmountActivity" />
-        <activity android:name=".DiscoverReadersActivity" />
     </application>
 
 </manifest>

@@ -47,6 +47,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.spark.core)
+    implementation(libs.gson)
     implementation(libs.firebase.database)
     // Stripe SDK for Android
     testImplementation(libs.mockito.core)

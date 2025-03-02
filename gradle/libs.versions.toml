@@ -3,6 +3,7 @@ agp = "8.8.0"
 androidxJunit = "1.1.4"
 core = "1.6.1"
 espressoCoreVersion = "3.5.0"
+gson = "2.12.1"
 jserialcomm = "[2.0.0,3.0.0)"
 kotlin = "2.0.0"
 coreKtx = "1.15.0"
@@ -15,6 +16,8 @@ composeBom = "2025.01.01"
 appcompat = "1.7.0"
 mockitoCore = "4.0.0"
 mockitoInline = "4.0.0"
+sparkCore = "2.9.4"
+sparkpost = "0.28.0"
 stripeAndroid = "21.3.2"
 stripeJava = "28.3.0"
 stripeterminal = "4.1.0"
@@ -25,6 +28,7 @@ androidx-core = { module = "androidx.test:core", version.ref = "core" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-espresso-core-v350 = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCoreVersion" }
 androidx-junit-v114 = { module = "androidx.test.ext:junit", version.ref = "androidxJunit" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 jserialcomm = { module = "com.fazecast:jSerialComm", version.ref = "jserialcomm" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -42,6 +46,8 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
 mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockitoInline" }
+spark-core = { module = "com.sparkjava:spark-core", version.ref = "sparkCore" }
+sparkpost = { module = "com.sparkpost:sparkpost", version.ref = "sparkpost" }
 stripe-android = { module = "com.stripe:stripe-android", version.ref = "stripeAndroid" }
 stripe-java = { module = "com.stripe:stripe-java", version.ref = "stripeJava" }
 stripeterminal = { module = "com.stripe:stripeterminal", version.ref = "stripeterminal" }

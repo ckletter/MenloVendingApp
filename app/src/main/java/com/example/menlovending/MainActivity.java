@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.Manifest;
 
+import com.example.menlovending.stripe.permissions.PermissionService;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.terminal.ConnectionToken;
@@ -85,6 +86,9 @@ public class MainActivity extends AppCompatActivity {
         enterButton.setGravity(Gravity.CENTER);
         enterButton.setOnClickListener(new EnterClickListener());
         keypadGrid.addView(enterButton);
+
+        // Check Permissions
+        PermissionService.checkPermissions(this);
 
     }
     private class NumberClickListener implements View.OnClickListener {

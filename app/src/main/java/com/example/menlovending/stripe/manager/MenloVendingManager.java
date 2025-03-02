@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import com.example.menlovending.ReaderManager;
 import com.example.menlovending.stripe.client.ReaderListener;
 import com.example.menlovending.stripe.client.ReaderUpdate;
 import com.example.menlovending.stripe.client.TerminalEventListener;
@@ -76,8 +77,8 @@ public class MenloVendingManager implements DiscoveryListener {
 
     @SuppressLint("MissingPermission")
     private void discoverReaders() {
-        DiscoveryConfiguration.UsbDiscoveryConfiguration config =
-                new DiscoveryConfiguration.UsbDiscoveryConfiguration(10, true);
+        DiscoveryConfiguration.BluetoothDiscoveryConfiguration config =
+                new DiscoveryConfiguration.BluetoothDiscoveryConfiguration(10, true);
 
         Terminal.getInstance().discoverReaders(config, this, new Callback() {
             @Override
@@ -86,7 +87,6 @@ public class MenloVendingManager implements DiscoveryListener {
             @Override
             public void onFailure(TerminalException e) {
                 System.out.println("Failed to discover readers: " + e.getMessage());
-//                retryInitialization();
             }
         });
     }
@@ -94,8 +94,11 @@ public class MenloVendingManager implements DiscoveryListener {
     @Override
     public void onUpdateDiscoveredReaders(List<Reader> readers) {
         if (!readers.isEmpty()) {
-            ConnectionConfiguration.UsbConnectionConfiguration connectionConfig =
-                    new ConnectionConfiguration.UsbConnectionConfiguration(
+            ReaderManager.getInstance().setReaders(readers);
+            Log.d("Manager", "Discovered " + readers.size() + " readers");
+            Reader bbpos = ReaderManager.getInstance().getReaderBySerial("CHB202118001480");
+            ConnectionConfiguration.BluetoothConnectionConfiguration connectionConfig =
+                    new ConnectionConfiguration.BluetoothConnectionConfiguration(
                             BuildConfig.STRIPE_LOCATION,
                             true,
                             new ReaderListener(
@@ -106,7 +109,7 @@ public class MenloVendingManager implements DiscoveryListener {
                             )
                     );
             Terminal.getInstance().connectReader(
-                    readers.get(0),
+                    bbpos,
                     connectionConfig,
                     new ReaderCallback() {
                         @Override
@@ -136,7 +139,6 @@ public class MenloVendingManager implements DiscoveryListener {
     private void onReconnectFailed() {
         Log.d("Manager", "Failed to reconnect to Stripe Terminal");
         fatalStatus("Failed to reconnect to Stripe Terminal", "Unknown Error");
-//        retryInitialization();
     }
 
     private void onSoftwareUpdate(ReaderUpdate updateProgress) {
