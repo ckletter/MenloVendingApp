@@ -116,6 +116,14 @@ public class MainActivity extends AppCompatActivity {
             }
             else {
                 displayTextView.setText("Invalid Item Number");
+                // Delay clearing the text for 2 seconds
+                new android.os.Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        enteredCode.setLength(0);  // Clear the entered code
+                        updateDisplay();  // Update the display
+                    }
+                }, 2000); // 2000 milliseconds = 2 seconds
                 return;
             }
             // Create an Intent to start the DiscoverReadersActivity

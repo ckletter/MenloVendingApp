@@ -2,6 +2,7 @@ package com.example.menlovending;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Message;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
@@ -30,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class DollarAmountActivity extends AppCompatActivity implements MobileReaderListener {
+public class DollarAmountActivity extends AppCompatActivity {
     Cancelable discoverCancelable = null;
     private double dollarAmount;
     Reader selectedReader;
@@ -49,21 +50,14 @@ public class DollarAmountActivity extends AppCompatActivity implements MobileRea
         Button backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(v -> finish()); // Ends current activity and returns to MainActivity
 
+
+        // Update context
+        ContextHolder.setContext(this);
         try {
             StripeTerminalApplication.processPayment();
         } catch (StripeException e) {
             throw new RuntimeException(e);
         }
-    }
-    @Override
-    public void onRequestReaderInput(ReaderInputOptions options) {
-        // Placeholder for updating your app's checkout UI
-//        Toast.makeText(getActivity(), options.toString(), Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onRequestReaderDisplayMessage(ReaderDisplayMessage message) {
-//        Toast.makeText(getActivity(), message.toString(), Toast.LENGTH_SHORT).show();
     }
 }
 

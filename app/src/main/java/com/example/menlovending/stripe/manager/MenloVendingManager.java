@@ -74,11 +74,13 @@ public class MenloVendingManager implements DiscoveryListener {
     public void onConnectionStatusChange(ConnectionStatus status) {
         System.out.println("Connection status changed to: " + status);
         this.connectionStatus = status;
+        updateStatus();
     }
 
     public void onPaymentStatusChange(PaymentStatus status) {
         System.out.println("Payment status changed to: " + status);
         this.paymentStatus = status;
+        updateStatus();
     }
 
     @SuppressLint("MissingPermission")
