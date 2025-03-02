@@ -50,12 +50,22 @@ public class MainActivity extends AppCompatActivity {
 
         displayTextView = findViewById(R.id.display_text_view);
         GridLayout keypadGrid = findViewById(R.id.keypad_grid);
+        // Define button size parameters
+        GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+        params.width = 0; // Fill available space in the column
+        params.height = 200; // Increase button height for better touch interaction
+        params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f); // Make columns evenly distributed
+        params.rowSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f); // Make rows evenly distributed
+        params.setMargins(8, 8, 8, 8); // Add spacing between buttons
+
 
         for (int i = 1; i <= 9; i++) {
             Button button = new Button(this);
             button.setText(String.valueOf(i));
-            button.setTextSize(24);
+            button.setTextSize(32);
             button.setGravity(Gravity.CENTER);
+            button.setPadding(16, 16, 16, 16);
+            button.setLayoutParams(new GridLayout.LayoutParams(params)); // Apply layout params
             button.setOnClickListener(new NumberClickListener(i));
             keypadGrid.addView(button);
         }
@@ -63,8 +73,10 @@ public class MainActivity extends AppCompatActivity {
         // Add a "Clear" button
         Button clearButton = new Button(this);
         clearButton.setText("CLEAR");
-        clearButton.setTextSize(18);
+        clearButton.setTextSize(24);
         clearButton.setGravity(Gravity.CENTER);
+        clearButton.setPadding(16, 16, 16, 16);
+        clearButton.setLayoutParams(new GridLayout.LayoutParams(params));
         clearButton.setOnClickListener(v -> {
             enteredCode.setLength(0);
             updateDisplay();
@@ -72,18 +84,22 @@ public class MainActivity extends AppCompatActivity {
         keypadGrid.addView(clearButton);
 
         // Add a zero button
-        Button button = new Button(this);
-        button.setText(String.valueOf(0));
-        button.setTextSize(24);
-        button.setGravity(Gravity.CENTER);
-        button.setOnClickListener(new NumberClickListener(0));
-        keypadGrid.addView(button);
+        Button zeroButton = new Button(this);
+        zeroButton.setText(String.valueOf(0));
+        zeroButton.setTextSize(32);
+        zeroButton.setGravity(Gravity.CENTER);
+        zeroButton.setPadding(16, 16, 16, 16);
+        zeroButton.setLayoutParams(new GridLayout.LayoutParams(params));
+        zeroButton.setOnClickListener(new NumberClickListener(0));
+        keypadGrid.addView(zeroButton);
 
         // Add an "Enter" button
         Button enterButton = new Button(this);
         enterButton.setText("ENTER");
-        enterButton.setTextSize(18);
+        enterButton.setTextSize(24);
         enterButton.setGravity(Gravity.CENTER);
+        enterButton.setPadding(16, 16, 16, 16);
+        enterButton.setLayoutParams(new GridLayout.LayoutParams(params));
         enterButton.setOnClickListener(new EnterClickListener());
         keypadGrid.addView(enterButton);
 
