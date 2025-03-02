@@ -162,7 +162,6 @@ public class MenloVendingManager implements DiscoveryListener {
     }
     // Global Status Update
     private void updateStatus() {
-        // Check connection status (switch)
         if (connectionStatus == ConnectionStatus.NOT_CONNECTED) {
             menloVendingState = new MenloVendingState(MenloVendingState.MenloVendingStatus.ERROR,
                     "Disconnected from Stripe Terminal", "");
@@ -179,6 +178,15 @@ public class MenloVendingManager implements DiscoveryListener {
         else if (connectionStatus == ConnectionStatus.DISCOVERING) {
             menloVendingState = new MenloVendingState(MenloVendingState.MenloVendingStatus.INITIALIZING,
                     "Searching for Stripe Terminal...", "");
+
+        }
+        if (paymentStatus == PaymentStatus.NOT_READY) {
+            menloVendingState = new MenloVendingState(MenloVendingState.MenloVendingStatus.ERROR,
+                    "Disconnected from Stripe Terminal", "");
+        }
+        else if (paymentStatus == PaymentStatus.READY) {
+            menloVendingState = new MenloVendingState(MenloVendingState.MenloVendingStatus.READY,
+                    "Connected to Stripe Terminal", "");
 
         }
     }

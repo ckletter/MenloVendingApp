@@ -126,6 +126,8 @@ public class MainActivity extends AppCompatActivity {
                 }, 2000); // 2000 milliseconds = 2 seconds
                 return;
             }
+            enteredCode.setLength(0);  // Clear the entered code
+            updateDisplay();
             // Create an Intent to start the DiscoverReadersActivity
             Intent intent = new Intent(MainActivity.this, DollarAmountActivity.class);
             // Pass the dollar amount as an extra

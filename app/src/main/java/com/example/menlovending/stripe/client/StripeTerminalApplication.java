@@ -44,22 +44,6 @@ public class StripeTerminalApplication extends Application {
     public static void processPayment() throws StripeException {
         StripeServer server = StripeServer.getInstance();
 
-//        PaymentIntentCreateParams params = new PaymentIntentCreateParams.Builder()
-//                .setAmount(50L)
-//                .addPaymentMethodType("card_present")
-//                .setCurrency("usd")
-//                .setCaptureMethod(PaymentIntentCreateParams.CaptureMethod.MANUAL)
-//                .build();
-//        Gson gson = new Gson();
-//
-//        get("/create_payment_intent", (request, response) -> {
-//            PaymentIntent intent = PaymentIntent.create(params);
-//
-//            Map<String, String> map = new HashMap();
-//            map.put("client_secret", intent.getClientSecret());
-//            return map;
-//        }, gson::toJson);
-
         PaymentIntentParameters params = new PaymentIntentParameters.Builder()
                 .setAmount(50L)
                 .setCurrency("usd")
@@ -106,46 +90,5 @@ public class StripeTerminalApplication extends Application {
                     }
                 }
         );
-
-//        Terminal.getInstance().createPaymentIntent(
-//                params,
-//                new PaymentIntentCallback() {
-//
-//                    @Override
-//                    public void onSuccess(@NonNull com.stripe.stripeterminal.external.models.PaymentIntent paymentIntent) {
-//                        Terminal.getInstance().collectPaymentMethod(paymentIntent, new PaymentIntentCallback() {
-//                            @Override
-//                            public void onSuccess(@NonNull com.stripe.stripeterminal.external.models.PaymentIntent paymentIntent) {
-//                                Terminal.getInstance().confirmPaymentIntent(paymentIntent, new PaymentIntentCallback() {
-//                                    @Override
-//                                    public void onSuccess(@NonNull com.stripe.stripeterminal.external.models.PaymentIntent paymentIntent) {
-//                                        String id = paymentIntent.getId();
-//                                        try {
-//                                            server.capturePaymentIntent(id);
-//                                        } catch (StripeException e) {
-//                                            MenloVendingManager.getInstance().fatalStatus("Failed to capture payment", "Unknown Error");
-//                                        }
-//                                    }
-//
-//                                    @Override
-//                                    public void onFailure(@NonNull TerminalException e) {
-//                                        MenloVendingManager.getInstance().fatalStatus("Failed to confirm payment", "Unknown Error");
-//                                    }
-//                                });
-//                            }
-//
-//                            @Override
-//                            public void onFailure(@NonNull TerminalException e) {
-//                                MenloVendingManager.getInstance().fatalStatus("Failed to collect payment", "Unknown Error");
-//                            }
-//                        });
-//                    }
-//
-//                    @Override
-//                    public void onFailure(@NonNull TerminalException e) {
-//                        MenloVendingManager.getInstance().fatalStatus("Failed to create payment intent", "Unknown Error");
-//                    }
-//                }
-//        );
     }
 }
