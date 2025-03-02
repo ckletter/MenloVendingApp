@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         keypadGrid.addView(enterButton);
 
         // Check Permissions
-        PermissionService.checkPermissions(this);
+//        PermissionService.checkPermissions(this);
 
     }
     private class NumberClickListener implements View.OnClickListener {

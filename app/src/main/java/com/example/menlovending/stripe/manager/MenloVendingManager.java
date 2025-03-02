@@ -78,7 +78,7 @@ public class MenloVendingManager implements DiscoveryListener {
     @SuppressLint("MissingPermission")
     private void discoverReaders() {
         DiscoveryConfiguration.BluetoothDiscoveryConfiguration config =
-                new DiscoveryConfiguration.BluetoothDiscoveryConfiguration(10, true);
+                new DiscoveryConfiguration.BluetoothDiscoveryConfiguration(0, false);
 
         Terminal.getInstance().discoverReaders(config, this, new Callback() {
             @Override
@@ -96,33 +96,36 @@ public class MenloVendingManager implements DiscoveryListener {
         if (!readers.isEmpty()) {
             ReaderManager.getInstance().setReaders(readers);
             Log.d("Manager", "Discovered " + readers.size() + " readers");
-            Reader bbpos = ReaderManager.getInstance().getReaderBySerial("CHB202118001480");
-            ConnectionConfiguration.BluetoothConnectionConfiguration connectionConfig =
-                    new ConnectionConfiguration.BluetoothConnectionConfiguration(
-                            BuildConfig.STRIPE_LOCATION,
-                            true,
-                            new ReaderListener(
-                                    this::onReconnectStarted,
-                                    this::onReconnectSucceeded,
-                                    this::onReconnectFailed,
-                                    this::onSoftwareUpdate
-                            )
-                    );
-            Terminal.getInstance().connectReader(
-                    bbpos,
-                    connectionConfig,
-                    new ReaderCallback() {
-                        @Override
-                        public void onSuccess(Reader reader) {
-                            Log.d("Manager", "Connected to reader");
-                        }
+            ReaderManager.getInstance().listReaders();
+            Reader bbpos = ReaderManager.getInstance().getReaderBySerial("CHB20Z118001480");
+            if (bbpos != null) {
+                ConnectionConfiguration.BluetoothConnectionConfiguration connectionConfig =
+                        new ConnectionConfiguration.BluetoothConnectionConfiguration(
+                                BuildConfig.STRIPE_LOCATION,
+                                true,
+                                new ReaderListener(
+                                        this::onReconnectStarted,
+                                        this::onReconnectSucceeded,
+                                        this::onReconnectFailed,
+                                        this::onSoftwareUpdate
+                                )
+                        );
+                Terminal.getInstance().connectReader(
+                        bbpos,
+                        connectionConfig,
+                        new ReaderCallback() {
+                            @Override
+                            public void onSuccess(Reader reader) {
+                                Log.d("Manager", "Connected to reader");
+                            }
 
-                        @Override
-                        public void onFailure(TerminalException e) {
-                            fatalStatus("Failed to connect to reader", e.getMessage());
+                            @Override
+                            public void onFailure(TerminalException e) {
+                                fatalStatus("Failed to connect to reader", e.getMessage());
+                            }
                         }
-                    }
-            );
+                );
+            }
         }
     }
 

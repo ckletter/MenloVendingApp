@@ -1,5 +1,7 @@
 package com.example.menlovending;
 
+import android.util.Log;
+
 import com.stripe.stripeterminal.external.models.Reader;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,5 +36,10 @@ public class ReaderManager {
             }
         }
         return null;
+    }
+    public void listReaders() {
+        for (Reader reader : readers) {
+            Log.d("ReaderManager", "Reader: " + reader.getSerialNumber());
+        }
     }
 }
