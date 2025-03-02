@@ -26,6 +26,7 @@ import com.stripe.stripeterminal.TerminalApplicationDelegate;
 import com.stripe.stripeterminal.external.callable.Cancelable;
 import com.stripe.stripeterminal.external.callable.PaymentIntentCallback;
 import com.stripe.stripeterminal.external.models.CaptureMethod;
+import com.stripe.stripeterminal.external.models.CollectConfiguration;
 import com.stripe.stripeterminal.external.models.PaymentIntentParameters;
 import com.stripe.stripeterminal.external.models.RefundParameters;
 import com.stripe.stripeterminal.external.models.TerminalException;
