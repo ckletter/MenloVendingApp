@@ -4,10 +4,12 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
+import jssc.SerialPortException;
+
 public class ArduinoHelperTest extends TestCase {
     @Test
-    public void test() {
+    public void test() throws SerialPortException {
         ArduinoHelper ah = new ArduinoHelper();
-        ah.connectToArduino();
+        ah.writeData();
     }
 }

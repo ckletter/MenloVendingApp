@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import com.example.menlovending.ArduinoHelper;
 import com.example.menlovending.ReaderManager;
 import com.example.menlovending.stripe.client.ReaderListener;
 import com.example.menlovending.stripe.client.ReaderUpdate;
@@ -29,6 +30,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.example.menlovending.BuildConfig;
+
+import jssc.SerialPortException;
 
 public class MenloVendingManager implements DiscoveryListener {
     private static final MenloVendingManager INSTANCE = new MenloVendingManager();
@@ -64,7 +67,10 @@ public class MenloVendingManager implements DiscoveryListener {
             discoverReaders();
         });
     }
-
+    public void arduinoSignal() throws SerialPortException {
+        ArduinoHelper arduinoHelper = new ArduinoHelper();
+        arduinoHelper.writeData();
+    }
     public void onConnectionStatusChange(ConnectionStatus status) {
         System.out.println("Connection status changed to: " + status);
         this.connectionStatus = status;

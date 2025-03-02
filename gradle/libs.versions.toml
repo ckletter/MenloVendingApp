@@ -5,6 +5,8 @@ core = "1.6.1"
 espressoCoreVersion = "3.5.0"
 gson = "2.12.1"
 jserialcomm = "[2.0.0,3.0.0)"
+jssc = "2.9.4"
+jsscVersion = "2.9.6"
 kotlin = "2.0.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
@@ -29,7 +31,9 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 androidx-espresso-core-v350 = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCoreVersion" }
 androidx-junit-v114 = { module = "androidx.test.ext:junit", version.ref = "androidxJunit" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+java-native-jssc = { module = "io.github.java-native:jssc", version.ref = "jsscVersion" }
 jserialcomm = { module = "com.fazecast:jSerialComm", version.ref = "jserialcomm" }
+jssc = { module = "org.scream3r:jssc", version.ref = "jssc" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
