@@ -1,0 +1,45 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="16dp">
+
+    <!-- Lottie Checkmark Animation -->
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/success_animation"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:lottie_rawRes="@raw/checkmark"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="false"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Payment Successful"
+        android:textSize="32sp"
+        android:textColor="@android:color/holo_green_dark"
+        android:fontFamily="sans-serif-medium"/>
+
+    <TextView
+        android:id="@+id/payment_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:textColor="@android:color/black"
+        android:text="Amount Paid: $0.00"
+        android:layout_marginTop="8dp"/>
+
+    <Button
+        android:id="@+id/done_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Done"
+        android:textSize="18sp"
+        android:padding="8dp"
+        android:layout_marginTop="24dp"
+        android:onClick="finish"/>
+</LinearLayout>

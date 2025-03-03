@@ -47,6 +47,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.lottie)
     implementation(libs.java.native.jssc)
     implementation(libs.spark.core)
     implementation(libs.gson)

@@ -16,6 +16,7 @@ lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.10.0"
 composeBom = "2025.01.01"
 appcompat = "1.7.0"
+lottie = "6.0.0"
 mockitoCore = "4.0.0"
 mockitoInline = "4.0.0"
 sparkCore = "2.9.4"
@@ -48,6 +49,7 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
 mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockitoInline" }
 spark-core = { module = "com.sparkjava:spark-core", version.ref = "sparkCore" }

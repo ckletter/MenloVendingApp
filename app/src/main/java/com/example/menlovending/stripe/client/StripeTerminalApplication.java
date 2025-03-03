@@ -3,12 +3,16 @@ package com.example.menlovending.stripe.client;
 import static java.lang.reflect.Array.get;
 
 import android.app.Application;
+import android.os.Handler;
+import android.os.Looper;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import com.example.menlovending.ContextHolder;
 import com.example.menlovending.stripe.permissions.PermissionService;
 import com.stripe.model.PaymentIntent;
 
@@ -32,6 +36,8 @@ import com.stripe.stripeterminal.external.models.RefundParameters;
 import com.stripe.stripeterminal.external.models.TerminalException;
 
 import org.jetbrains.annotations.NotNull;
+
+import jssc.SerialPortException;
 
 public class StripeTerminalApplication extends Application {
     @Override
@@ -65,8 +71,21 @@ public class StripeTerminalApplication extends Application {
                                         String id = paymentIntent.getId();
                                         try {
                                             server.capturePaymentIntent(id);
+                                            // Make sure we are on the main thread before showing the Toast
+                                            if (Looper.myLooper() == Looper.getMainLooper()) {
+                                                // If we're already on the main thread, show the Toast
+                                                Toast.makeText(ContextHolder.getContext(), "Payment success!", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                // Otherwise, post to the main thread to show the Toast
+                                                new Handler(Looper.getMainLooper()).post(() -> {
+                                                    Toast.makeText(ContextHolder.getContext(), "Payment success!", Toast.LENGTH_SHORT).show();
+                                                });
+                                            }
+                                            MenloVendingManager.getInstance().arduinoSignal();
                                         } catch (StripeException e) {
                                             MenloVendingManager.getInstance().fatalStatus("Failed to capture payment", "Unknown Error");
+                                        } catch (SerialPortException e) {
+                                            throw new RuntimeException(e);
                                         }
                                     }
 
