@@ -3,6 +3,8 @@ package com.example.menlovending.stripe.client;
 import static java.lang.reflect.Array.get;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
@@ -13,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.example.menlovending.ContextHolder;
+import com.example.menlovending.PaymentSuccessActivity;
 import com.example.menlovending.stripe.permissions.PermissionService;
 import com.stripe.model.PaymentIntent;
 
@@ -47,11 +50,14 @@ public class StripeTerminalApplication extends Application {
         TerminalApplicationDelegate.onCreate(this);
     }
 
-    public static void processPayment() throws StripeException {
+    public static void processPayment(double amount) throws StripeException {
+        // Convert from dollars to proper currency
+        long amountInCents = (long) (amount * 100);
+
         StripeServer server = StripeServer.getInstance();
 
         PaymentIntentParameters params = new PaymentIntentParameters.Builder()
-                .setAmount(50L)
+                .setAmount(amountInCents)
                 .setCurrency("usd")
                 .setCaptureMethod(CaptureMethod.Manual)
                 .build();
@@ -71,16 +77,9 @@ public class StripeTerminalApplication extends Application {
                                         String id = paymentIntent.getId();
                                         try {
                                             server.capturePaymentIntent(id);
-                                            // Make sure we are on the main thread before showing the Toast
-                                            if (Looper.myLooper() == Looper.getMainLooper()) {
-                                                // If we're already on the main thread, show the Toast
-                                                Toast.makeText(ContextHolder.getContext(), "Payment success!", Toast.LENGTH_SHORT).show();
-                                            } else {
-                                                // Otherwise, post to the main thread to show the Toast
-                                                new Handler(Looper.getMainLooper()).post(() -> {
-                                                    Toast.makeText(ContextHolder.getContext(), "Payment success!", Toast.LENGTH_SHORT).show();
-                                                });
-                                            }
+                                            // Navigate to PaymentSuccessActivity
+                                            double amount = paymentIntent.getAmount();
+                                            navigateToPaymentSuccess(String.valueOf(amount));
                                             MenloVendingManager.getInstance().arduinoSignal();
                                         } catch (StripeException e) {
                                             MenloVendingManager.getInstance().fatalStatus("Failed to capture payment", "Unknown Error");
@@ -109,5 +108,15 @@ public class StripeTerminalApplication extends Application {
                     }
                 }
         );
+    }
+    private static void navigateToPaymentSuccess(String amount) {
+        Context context = ContextHolder.getContext();
+        Intent intent = new Intent(context, PaymentSuccessActivity.class);
+        intent.putExtra("PAYMENT_AMOUNT", amount);
+
+        // Add FLAG_ACTIVITY_NEW_TASK since we're starting an activity from a non-activity context
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        context.startActivity(intent);
     }
 }
