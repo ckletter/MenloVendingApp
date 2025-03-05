@@ -1,5 +1,6 @@
-package com.example.menlovending;
+package com.example.menlovending.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
@@ -8,8 +9,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.example.menlovending.R;
 
 public class PaymentSuccessActivity extends AppCompatActivity {
+    @SuppressLint("DefaultLocale")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,7 +21,7 @@ public class PaymentSuccessActivity extends AppCompatActivity {
         // Get the amount from the intent
         TextView amountTextView = findViewById(R.id.payment_amount);
         double amount = getIntent().getDoubleExtra("PAYMENT_AMOUNT", 0.0);
-        amountTextView.setText("Amount Paid: $%.2f" + amount);
+        amountTextView.setText(String.format("Amount Paid: $%.2f", amount));
 
         Button doneButton = findViewById(R.id.done_button);
 

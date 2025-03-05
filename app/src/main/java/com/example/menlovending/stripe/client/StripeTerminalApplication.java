@@ -1,49 +1,26 @@
 package com.example.menlovending.stripe.client;
 
-import static java.lang.reflect.Array.get;
-
 import android.app.Application;
-import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.example.menlovending.stripe.manager.ContextHolder;
+import com.example.menlovending.ui.PaymentSuccessActivity;
 
-import com.example.menlovending.ArduinoHelper;
-import com.example.menlovending.ContextHolder;
-import com.example.menlovending.PaymentSuccessActivity;
-import com.example.menlovending.stripe.permissions.PermissionService;
-import com.stripe.model.PaymentIntent;
-
-import com.google.gson.Gson;
 import static spark.Spark.post;
 import com.example.menlovending.stripe.manager.MenloVendingManager;
-import com.example.menlovending.stripe.server.StripeServer;
-import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
-import com.stripe.param.PaymentIntentCreateParams;
-import com.stripe.param.reporting.ReportRunCreateParams;
 import com.stripe.stripeterminal.Terminal;
-import com.stripe.model.PaymentIntent;
 import com.stripe.stripeterminal.TerminalApplicationDelegate;
 import com.stripe.stripeterminal.external.callable.Callback;
 import com.stripe.stripeterminal.external.callable.Cancelable;
 import com.stripe.stripeterminal.external.callable.PaymentIntentCallback;
 import com.stripe.stripeterminal.external.models.CaptureMethod;
-import com.stripe.stripeterminal.external.models.CollectConfiguration;
 import com.stripe.stripeterminal.external.models.PaymentIntentParameters;
-import com.stripe.stripeterminal.external.models.RefundParameters;
 import com.stripe.stripeterminal.external.models.TerminalException;
 
-import org.jetbrains.annotations.NotNull;
-
-import jssc.SerialPortException;
 public class StripeTerminalApplication extends Application {
     private static com.stripe.stripeterminal.external.models.PaymentIntent currentPaymentIntent;
     private static Cancelable collectPaymentMethodCancelable;

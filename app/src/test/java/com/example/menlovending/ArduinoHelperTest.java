@@ -1,5 +1,7 @@
 package com.example.menlovending;
 
+import com.example.menlovending.stripe.manager.ArduinoHelper;
+
 import junit.framework.TestCase;
 
 import org.junit.Test;

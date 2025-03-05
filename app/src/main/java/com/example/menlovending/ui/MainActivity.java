@@ -1,39 +1,17 @@
-package com.example.menlovending;
+package com.example.menlovending.ui;
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.GridLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
-import android.Manifest;
 
-import com.example.menlovending.stripe.permissions.PermissionService;
-import com.stripe.Stripe;
-import com.stripe.exception.StripeException;
-import com.stripe.model.terminal.ConnectionToken;
-import com.stripe.param.PaymentIntentCreateParams;
-import com.stripe.param.terminal.ConnectionTokenCreateParams;
-import com.stripe.stripeterminal.Terminal;
-import com.stripe.stripeterminal.external.callable.Cancelable;
-import com.stripe.stripeterminal.external.callable.PaymentIntentCallback;
-import com.stripe.stripeterminal.external.callable.TerminalListener;
-import com.stripe.stripeterminal.external.models.ConnectionStatus;
-import com.stripe.stripeterminal.external.models.PaymentIntent;
-import com.stripe.stripeterminal.external.models.PaymentIntentParameters;
-import com.stripe.stripeterminal.external.models.PaymentStatus;
-import com.stripe.stripeterminal.external.models.TerminalException;
-import com.stripe.stripeterminal.log.LogLevel;
-
-import org.jetbrains.annotations.NotNull;
+import com.example.menlovending.R;
 
 public class MainActivity extends AppCompatActivity {
     public static final int ITEM_COUNT = 16;

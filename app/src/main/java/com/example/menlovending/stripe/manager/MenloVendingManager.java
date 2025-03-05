@@ -2,12 +2,8 @@ package com.example.menlovending.stripe.manager;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
-import com.example.menlovending.ArduinoHelper;
-import com.example.menlovending.ReaderManager;
 import com.example.menlovending.stripe.client.ReaderListener;
 import com.example.menlovending.stripe.client.ReaderUpdate;
 import com.example.menlovending.stripe.client.TerminalEventListener;
@@ -45,6 +41,10 @@ public class MenloVendingManager implements DiscoveryListener {
 
     public static MenloVendingManager getInstance() {
         return INSTANCE;
+    }
+
+    public MenloVendingState getMenloVendingState() {
+        return menloVendingState;
     }
 
     public void initialize(Context context) {

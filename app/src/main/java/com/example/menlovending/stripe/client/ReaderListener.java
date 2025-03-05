@@ -7,8 +7,7 @@ import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.menlovending.ContextHolder;
-import com.example.menlovending.DollarAmountActivity;
+import com.example.menlovending.stripe.manager.ContextHolder;
 import com.stripe.stripeterminal.Terminal;
 import com.stripe.stripeterminal.external.callable.Cancelable;
 import com.stripe.stripeterminal.external.callable.MobileReaderListener;

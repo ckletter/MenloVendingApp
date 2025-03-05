@@ -1,4 +1,4 @@
-package com.example.menlovending;
+package com.example.menlovending.stripe.manager;
 
 import android.util.Log;
 

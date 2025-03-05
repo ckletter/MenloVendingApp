@@ -1,21 +1,13 @@
-package com.example.menlovending;
+package com.example.menlovending.stripe.manager;
 
 import static jssc.SerialPort.BAUDRATE_115200;
-import static jssc.SerialPort.BAUDRATE_9600;
 import static jssc.SerialPort.DATABITS_8;
 import static jssc.SerialPort.PARITY_NONE;
 import static jssc.SerialPort.STOPBITS_1;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import jssc.SerialPort;
-import jssc.SerialPortEvent;
-import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
 import jssc.SerialPortList;
-
-import java.util.Enumeration;
 
 public class ArduinoHelper {
     SerialPort port;
