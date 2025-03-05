@@ -42,7 +42,6 @@ public class DollarAmountActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dollar_amount);
         // Retrieve the extra from the intent
         dollarAmount = getIntent().getDoubleExtra("DOLLAR_AMOUNT", 0.0);
-
         // Display the dollarAmount
         TextView amountTextView = findViewById(R.id.dollar_amount_text_view);
         amountTextView.setText(String.format("$%.2f", dollarAmount));
@@ -56,8 +55,6 @@ public class DollarAmountActivity extends AppCompatActivity {
         backButton.setOnClickListener(v -> finish()); // Ends current activity and returns to MainActivity
 
 
-        // Update context
-        ContextHolder.setContext(this);
         try {
             StripeTerminalApplication.processPayment(dollarAmount);
         } catch (StripeException e) {

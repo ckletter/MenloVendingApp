@@ -19,11 +19,13 @@ import com.stripe.stripeterminal.external.models.ReaderInputOptions;
 import com.stripe.stripeterminal.external.models.ReaderSoftwareUpdate;
 import com.stripe.stripeterminal.external.models.TerminalException;
 
+
 public class ReaderListener implements MobileReaderListener {
     private final Runnable onReconnectStarted;
     private final Runnable onReconnectSucceeded;
     private final Runnable onReconnectFailed;
     private final java.util.function.Consumer<ReaderUpdate> onReaderUpdate;
+
 
     public ReaderListener(
             Runnable onReconnectStarted,

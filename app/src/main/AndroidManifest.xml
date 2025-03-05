@@ -30,6 +30,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".DollarAmountActivity" />
+        <activity
+            android:name=".PaymentSuccessActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
