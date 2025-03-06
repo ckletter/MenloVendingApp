@@ -47,6 +47,7 @@ android {
 }
 
 dependencies {
+    implementation("com.github.mik3y:usb-serial-for-android:3.8.1")
     implementation(libs.lottie)
     implementation(libs.java.native.jssc)
     implementation(libs.spark.core)

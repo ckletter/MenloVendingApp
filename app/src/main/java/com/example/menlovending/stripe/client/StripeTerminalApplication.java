@@ -7,6 +7,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.example.menlovending.BuildConfig;
+import com.example.menlovending.stripe.manager.ArduinoHelper;
 import com.example.menlovending.stripe.manager.ContextHolder;
 import com.example.menlovending.stripe.manager.ReaderManager;
 import com.example.menlovending.ui.PaymentSuccessActivity;
@@ -25,6 +26,8 @@ import com.stripe.stripeterminal.external.models.ConnectionConfiguration;
 import com.stripe.stripeterminal.external.models.PaymentIntentParameters;
 import com.stripe.stripeterminal.external.models.Reader;
 import com.stripe.stripeterminal.external.models.TerminalException;
+
+import jssc.SerialPortException;
 
 public class StripeTerminalApplication extends Application {
     private static com.stripe.stripeterminal.external.models.PaymentIntent currentPaymentIntent;
@@ -92,6 +95,12 @@ public class StripeTerminalApplication extends Application {
                     public void onSuccess(@NonNull com.stripe.stripeterminal.external.models.PaymentIntent confirmedPaymentIntent) {
                         String id = confirmedPaymentIntent.getId();
                         double amount = (double) confirmedPaymentIntent.getAmount() / 100;
+                        try {
+                            signalToArduino();
+                        } catch (SerialPortException e) {
+                            Log.e("Arduino", "Failed to send signal to Arduino", e);
+                            throw new RuntimeException(e);
+                        }
                         navigateToPaymentSuccess(amount);
 
                     }
@@ -162,5 +171,10 @@ public class StripeTerminalApplication extends Application {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         ContextHolder.getContext().startActivity(intent);
+    }
+    private static void signalToArduino() throws SerialPortException {
+        Log.d("Arduino", "Signal sent to Arduino");
+        ArduinoHelper ah = new ArduinoHelper();
+        ah.writeData();
     }
 }

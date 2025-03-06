@@ -25,6 +25,7 @@ stripeAndroid = "21.3.2"
 stripeJava = "28.3.0"
 stripeterminal = "4.1.0"
 firebaseDatabase = "21.0.0"
+usbSerialForAndroid = "3.8.1"
 
 [libraries]
 androidx-core = { module = "androidx.test:core", version.ref = "core" }
@@ -58,6 +59,7 @@ stripe-android = { module = "com.stripe:stripe-android", version.ref = "stripeAn
 stripe-java = { module = "com.stripe:stripe-java", version.ref = "stripeJava" }
 stripeterminal = { module = "com.stripe:stripeterminal", version.ref = "stripeterminal" }
 firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
+usb-serial-for-android = { module = "com.github.mik3y:usb-serial-for-android", version.ref = "usbSerialForAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
