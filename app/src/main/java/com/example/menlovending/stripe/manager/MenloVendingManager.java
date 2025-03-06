@@ -3,8 +3,10 @@ package com.example.menlovending.stripe.manager;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.menlovending.stripe.client.ReaderListener;
+import com.example.menlovending.stripe.client.ReaderListenerCallback;
 import com.example.menlovending.stripe.client.ReaderUpdate;
 import com.example.menlovending.stripe.client.TerminalEventListener;
 import com.example.menlovending.stripe.client.TokenProvider;
@@ -107,6 +109,7 @@ public class MenloVendingManager implements DiscoveryListener {
             ReaderManager.getInstance().listReaders();
             Reader bbpos = ReaderManager.getInstance().getReaderBySerial("CHB20Z118001480");
             if (bbpos != null) {
+                ReaderManager.getInstance().setLastConnectedReader(bbpos);
                 ConnectionConfiguration.BluetoothConnectionConfiguration connectionConfig =
                         new ConnectionConfiguration.BluetoothConnectionConfiguration(
                                 BuildConfig.STRIPE_LOCATION,
@@ -115,7 +118,18 @@ public class MenloVendingManager implements DiscoveryListener {
                                         this::onReconnectStarted,
                                         this::onReconnectSucceeded,
                                         this::onReconnectFailed,
-                                        this::onSoftwareUpdate
+                                        this::onSoftwareUpdate,
+                                        new ReaderListenerCallback() {
+                                            @Override
+                                            public void showToastMessage(String message) {
+                                                if (ContextHolder.getContext() != null) {
+                                                    android.os.Handler mainHandler = new android.os.Handler(ContextHolder.getContext().getMainLooper());
+                                                    mainHandler.post(() ->
+                                                            Toast.makeText(ContextHolder.getContext(), message, Toast.LENGTH_SHORT).show()
+                                                    );
+                                                }
+                                            }
+                                        }
                                 )
                         );
                 Terminal.getInstance().connectReader(
@@ -134,6 +148,49 @@ public class MenloVendingManager implements DiscoveryListener {
                         }
                 );
             }
+        }
+    }
+    public void reconnectReader() {
+        Reader reader = ReaderManager.getInstance().getLastConnectedReader();
+        if (reader != null) {
+            ConnectionConfiguration.BluetoothConnectionConfiguration connectionConfig =
+                    new ConnectionConfiguration.BluetoothConnectionConfiguration(
+                            BuildConfig.STRIPE_LOCATION,
+                            true,
+                            new ReaderListener(
+                                    this::onReconnectStarted,
+                                    this::onReconnectSucceeded,
+                                    this::onReconnectFailed,
+                                    this::onSoftwareUpdate,
+                                    new ReaderListenerCallback() {
+                                        @Override
+                                        public void showToastMessage(String message) {
+                                            if (ContextHolder.getContext() != null) {
+                                                android.os.Handler mainHandler = new android.os.Handler(ContextHolder.getContext().getMainLooper());
+                                                mainHandler.post(() ->
+                                                        Toast.makeText(ContextHolder.getContext(), message, Toast.LENGTH_SHORT).show()
+                                                );
+                                            }
+                                        }
+                                    }
+                            )
+                    );
+
+            Terminal.getInstance().connectReader(
+                    reader,
+                    connectionConfig,
+                    new ReaderCallback() {
+                        @Override
+                        public void onSuccess(Reader connectedReader) {
+                            Log.d("Reader", "Reconnected to reader successfully");
+                        }
+
+                        @Override
+                        public void onFailure(TerminalException e) {
+                            Log.e("Reader", "Failed to reconnect to reader", e);
+                        }
+                    }
+            );
         }
     }
 

@@ -2,6 +2,8 @@ package com.example.menlovending.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.widget.GridLayout;
 import android.widget.TextView;
 
@@ -12,12 +14,19 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.menlovending.R;
+import com.example.menlovending.stripe.manager.MenloVendingManager;
+import com.example.menlovending.stripe.manager.MenloVendingState;
 
 public class MainActivity extends AppCompatActivity {
     public static final int ITEM_COUNT = 16;
     private TextView displayTextView;
     private StringBuilder enteredCode = new StringBuilder();
+    private static final int CONNECTION_CHECK_INTERVAL = 3000;
+    private Handler connectionCheckHandler = new Handler();
+    private Runnable connectionCheckRunnable;
     private double[] prices = new double[ITEM_COUNT + 1];
+
+    private boolean activityActive = true; // Track if this activity is active
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +91,8 @@ public class MainActivity extends AppCompatActivity {
         enterButton.setOnClickListener(new EnterClickListener());
         keypadGrid.addView(enterButton);
 
+
+        startConnectionMonitoring();
         // Check Permissions
 //        PermissionService.checkPermissions(this);
 
@@ -134,5 +145,58 @@ public class MainActivity extends AppCompatActivity {
     }
     private void updateDisplay() {
         displayTextView.setText(enteredCode.toString());
+    }
+
+    private void startConnectionMonitoring() {
+        connectionCheckRunnable = new Runnable() {
+            @Override
+            public void run() {
+                checkReaderConnection();
+                connectionCheckHandler.postDelayed(this, CONNECTION_CHECK_INTERVAL);
+            }
+        };
+
+        // Start the initial check
+        connectionCheckHandler.post(connectionCheckRunnable);
+    }
+
+    private void checkReaderConnection() {
+        MenloVendingState currentState = MenloVendingManager.getInstance().getMenloVendingState();
+
+        if (currentState.getStatus() == MenloVendingState.MenloVendingStatus.ERROR ||
+                currentState.getStatus() == MenloVendingState.MenloVendingStatus.FATAL || currentState.getStatus() == MenloVendingState.MenloVendingStatus.INITIALIZING) {
+            // Stop the connection check handler
+            connectionCheckHandler.removeCallbacks(connectionCheckRunnable);
+            // Mark this activity as inactive
+            activityActive = false;
+
+
+            // Launch the disconnection activity
+            Intent intent = new Intent(MainActivity.this, ReaderDisconnectActivity.class);
+            Log.d("MainActivity", "Launching ReaderDisconnectActivity");
+            startActivity(intent);
+        }
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Temporarily pause checks when activity is not visible
+        connectionCheckHandler.removeCallbacks(connectionCheckRunnable);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Only restart checks if the activity is still considered active
+        if (activityActive) {
+            connectionCheckHandler.post(connectionCheckRunnable);
+        }
+    }
+    @Override
+    protected void onDestroy() {
+        // Make sure to remove callbacks to prevent memory leaks
+        activityActive = false;
+        connectionCheckHandler.removeCallbacks(connectionCheckRunnable);
+        super.onDestroy();
     }
 }

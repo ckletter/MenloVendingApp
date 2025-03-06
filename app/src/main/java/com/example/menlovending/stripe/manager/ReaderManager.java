@@ -10,6 +10,7 @@ public class ReaderManager {
     private static ReaderManager instance;
     private List<Reader> readers;
 
+    private Reader lastConnectedReader; // Store the last connected reader
     private ReaderManager() {
         readers = new ArrayList<>();
     }
@@ -19,6 +20,15 @@ public class ReaderManager {
             instance = new ReaderManager();
         }
         return instance;
+    }
+    // Set the last connected reader
+    public void setLastConnectedReader(Reader reader) {
+        this.lastConnectedReader = reader;
+    }
+
+    // Get the last connected reader
+    public Reader getLastConnectedReader() {
+        return lastConnectedReader;
     }
 
     public void setReaders(List<Reader> readers) {

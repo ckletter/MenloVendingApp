@@ -22,13 +22,13 @@ public class ReaderDisconnectActivity extends AppCompatActivity {
         setContentView(R.layout.activity_reader_disconnection);
 
         statusTextView = findViewById(R.id.status_text_view);
-        retryButton = findViewById(R.id.retry_button);
+//        retryButton = findViewById(R.id.retry_button);
 
         // Set initial status message
-        statusTextView.setText("Stripe Terminal Reader Disconnected");
+        statusTextView.setText("Stripe Terminal Reader Not Connected");
 
         // Setup retry button
-        retryButton.setOnClickListener(v -> checkReaderConnection());
+//        retryButton.setOnClickListener(v -> checkReaderConnection());
 
         // Start monitoring connection status
         startConnectionStatusMonitoring();

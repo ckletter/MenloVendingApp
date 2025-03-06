@@ -18,11 +18,14 @@ import com.stripe.stripeterminal.external.models.ReaderInputOptions;
 import com.stripe.stripeterminal.external.models.ReaderSoftwareUpdate;
 import com.stripe.stripeterminal.external.models.TerminalException;
 
+import java.util.function.Consumer;
+
 
 public class ReaderListener implements MobileReaderListener {
     private final Runnable onReconnectStarted;
     private final Runnable onReconnectSucceeded;
     private final Runnable onReconnectFailed;
+    private final ReaderListenerCallback callback;
     private final java.util.function.Consumer<ReaderUpdate> onReaderUpdate;
 
 
@@ -30,11 +33,12 @@ public class ReaderListener implements MobileReaderListener {
             Runnable onReconnectStarted,
             Runnable onReconnectSucceeded,
             Runnable onReconnectFailed,
-            java.util.function.Consumer<ReaderUpdate> onReaderUpdate) {
+            Consumer<ReaderUpdate> onReaderUpdate, ReaderListenerCallback readerListenerCallback) {
         this.onReconnectStarted = onReconnectStarted;
         this.onReconnectSucceeded = onReconnectSucceeded;
         this.onReconnectFailed = onReconnectFailed;
         this.onReaderUpdate = onReaderUpdate;
+        this.callback = readerListenerCallback;
     }
 
     @Override
@@ -75,30 +79,14 @@ public class ReaderListener implements MobileReaderListener {
     public void onRequestReaderInput(ReaderInputOptions options) {
         // Placeholder for updating your app's checkout UI
         Log.d("ReaderListener", "onRequestReaderInput: " + options.toString());
-        // Make sure we are on the main thread before showing the Toast
-        if (Looper.myLooper() == Looper.getMainLooper()) {
-            // If we're already on the main thread, show the Toast
-            Toast.makeText(ContextHolder.getContext(), options.toString(), Toast.LENGTH_SHORT).show();
-        } else {
-            // Otherwise, post to the main thread to show the Toast
-            new Handler(Looper.getMainLooper()).post(() -> {
-                Toast.makeText(ContextHolder.getContext(), options.toString(), Toast.LENGTH_SHORT).show();
-            });
-        }
+        // Use callback to display message
+        callback.showToastMessage(options.toString());
     }
 
     @Override
     public void onRequestReaderDisplayMessage(ReaderDisplayMessage message) {
         Log.d("ReaderListener", "onRequestReaderDisplayMessage: " + message.toString());
-        // Make sure we are on the main thread before showing the Toast
-        if (Looper.myLooper() == Looper.getMainLooper()) {
-            // If we're already on the main thread, show the Toast
-            Toast.makeText(ContextHolder.getContext(), message.toString(), Toast.LENGTH_SHORT).show();
-        } else {
-            // Otherwise, post to the main thread to show the Toast
-            new Handler(Looper.getMainLooper()).post(() -> {
-                Toast.makeText(ContextHolder.getContext(), message.toString(), Toast.LENGTH_SHORT).show();
-            });
-        }
+        // Use callback to display message
+        callback.showToastMessage(message.toString());
     }
 }

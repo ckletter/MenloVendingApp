@@ -21,11 +21,15 @@
         android:textAlignment="center"
         android:layout_marginBottom="16dp"/>
 
-    <Button
-        android:id="@+id/retry_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Retry Connection"
-        android:backgroundTint="?attr/colorPrimary"/>
+<!--    <Button-->
+<!--        android:id="@+id/retry_button"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Retry Connection"-->
+<!--        android:layout_margin="16dp"-->
+<!--        android:background="?android:attr/selectableItemBackground"-->
+<!--        android:textSize="24sp"-->
+<!--        android:padding="8dp"-->
+<!--        android:textColor="@android:color/black"/>-->
 
 </LinearLayout>

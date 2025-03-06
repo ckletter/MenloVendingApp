@@ -6,7 +6,9 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.menlovending.BuildConfig;
 import com.example.menlovending.stripe.manager.ContextHolder;
+import com.example.menlovending.stripe.manager.ReaderManager;
 import com.example.menlovending.ui.PaymentSuccessActivity;
 
 import static spark.Spark.post;
@@ -17,8 +19,11 @@ import com.stripe.stripeterminal.TerminalApplicationDelegate;
 import com.stripe.stripeterminal.external.callable.Callback;
 import com.stripe.stripeterminal.external.callable.Cancelable;
 import com.stripe.stripeterminal.external.callable.PaymentIntentCallback;
+import com.stripe.stripeterminal.external.callable.ReaderCallback;
 import com.stripe.stripeterminal.external.models.CaptureMethod;
+import com.stripe.stripeterminal.external.models.ConnectionConfiguration;
 import com.stripe.stripeterminal.external.models.PaymentIntentParameters;
+import com.stripe.stripeterminal.external.models.Reader;
 import com.stripe.stripeterminal.external.models.TerminalException;
 
 public class StripeTerminalApplication extends Application {
@@ -107,32 +112,47 @@ public class StripeTerminalApplication extends Application {
                     @Override
                     public void onSuccess() {
                         Log.d("PaymentIntent", "Payment method collection canceled");
+                        // Reconnect to the reader if it was disconnected
+                        if (Terminal.getInstance().getConnectedReader() == null) {
+                            Log.d("PaymentIntent", "Reader is not connected. Reconnecting...");
+                            MenloVendingManager.getInstance().reconnectReader();
+                        } else {
+                            Log.d("PaymentIntent", "Reader is still connected.");
+                        }
                     }
 
                     @Override
                     public void onFailure(@NonNull TerminalException e) {
                         Log.e("PaymentIntent", "Failed to cancel payment method collection", e);
+                        // Reconnect to the reader to avoid session loss
+                        if (Terminal.getInstance().getConnectedReader() == null) {
+                            MenloVendingManager.getInstance().reconnectReader();
+                        }
                     }
                 });
             }
+            // Only cancel payment intent if the reader session is still active
+            if (Terminal.getInstance().getConnectedReader() != null) {
+                // Cancel the payment intent
+                Terminal.getInstance().cancelPaymentIntent(
+                        currentPaymentIntent,
+                        new PaymentIntentCallback() {
+                            @Override
+                            public void onSuccess(@NonNull com.stripe.stripeterminal.external.models.PaymentIntent paymentIntent) {
+                                Log.d("PaymentIntent", "Payment intent successfully canceled");
+                                currentPaymentIntent = null;
+                                collectPaymentMethodCancelable = null;
+                            }
 
-            // Cancel the payment intent
-            Terminal.getInstance().cancelPaymentIntent(
-                    currentPaymentIntent,
-                    new PaymentIntentCallback() {
-                        @Override
-                        public void onSuccess(@NonNull com.stripe.stripeterminal.external.models.PaymentIntent paymentIntent) {
-                            Log.d("PaymentIntent", "Payment intent successfully canceled");
-                            currentPaymentIntent = null;
-                            collectPaymentMethodCancelable = null;
+                            @Override
+                            public void onFailure(@NonNull TerminalException e) {
+                                Log.e("PaymentIntent", "Failed to cancel payment intent", e);
+                            }
                         }
-
-                        @Override
-                        public void onFailure(@NonNull TerminalException e) {
-                            Log.e("PaymentIntent", "Failed to cancel payment intent", e);
-                        }
-                    }
-            );
+                );
+            } else {
+                Log.w("PaymentIntent", "Reader is already disconnected, skipping cancelPaymentIntent.");
+            }
         }
     }
 

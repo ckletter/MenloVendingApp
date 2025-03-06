@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.menlovending.R;
 import com.example.menlovending.stripe.client.StripeTerminalApplication;
+import com.example.menlovending.stripe.manager.MenloVendingManager;
 import com.stripe.exception.StripeException;
 import com.stripe.stripeterminal.external.callable.Cancelable;
 
