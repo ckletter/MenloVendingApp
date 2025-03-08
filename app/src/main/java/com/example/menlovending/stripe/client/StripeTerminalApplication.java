@@ -1,5 +1,8 @@
 package com.example.menlovending.stripe.client;
 
+import static com.example.menlovending.stripe.manager.MenloVendingManager.getInstance;
+
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Intent;
 import android.util.Log;
@@ -32,12 +35,14 @@ import jssc.SerialPortException;
 public class StripeTerminalApplication extends Application {
     private static com.stripe.stripeterminal.external.models.PaymentIntent currentPaymentIntent;
     private static Cancelable collectPaymentMethodCancelable;
+    private ArduinoHelper arduinoHelper;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        MenloVendingManager.getInstance().initialize(this);
+        getInstance().initialize(this);
         ContextHolder.setContext(getApplicationContext());
+
         TerminalApplicationDelegate.onCreate(this);
     }
 
@@ -65,7 +70,7 @@ public class StripeTerminalApplication extends Application {
 
             @Override
             public void onFailure(@NonNull TerminalException e) {
-                MenloVendingManager.getInstance().fatalStatus("Failed to create payment intent", "Unknown Error");
+                getInstance().fatalStatus("Failed to create payment intent", "Unknown Error");
             }
         });
     }
@@ -81,7 +86,7 @@ public class StripeTerminalApplication extends Application {
 
                     @Override
                     public void onFailure(@NonNull TerminalException e) {
-                        MenloVendingManager.getInstance().fatalStatus("Failed to collect payment", "Unknown Error");
+                        getInstance().fatalStatus("Failed to collect payment", "Unknown Error");
                     }
                 }
         );
@@ -95,19 +100,14 @@ public class StripeTerminalApplication extends Application {
                     public void onSuccess(@NonNull com.stripe.stripeterminal.external.models.PaymentIntent confirmedPaymentIntent) {
                         String id = confirmedPaymentIntent.getId();
                         double amount = (double) confirmedPaymentIntent.getAmount() / 100;
-                        try {
-                            signalToArduino();
-                        } catch (SerialPortException e) {
-                            Log.e("Arduino", "Failed to send signal to Arduino", e);
-                            throw new RuntimeException(e);
-                        }
+                        signalToArduino();
                         navigateToPaymentSuccess(amount);
 
                     }
 
                     @Override
                     public void onFailure(@NonNull TerminalException e) {
-                        MenloVendingManager.getInstance().fatalStatus("Failed to confirm payment", "Unknown Error");
+                        getInstance().fatalStatus("Failed to confirm payment", "Unknown Error");
                     }
                 }
         );
@@ -124,7 +124,7 @@ public class StripeTerminalApplication extends Application {
                         // Reconnect to the reader if it was disconnected
                         if (Terminal.getInstance().getConnectedReader() == null) {
                             Log.d("PaymentIntent", "Reader is not connected. Reconnecting...");
-                            MenloVendingManager.getInstance().reconnectReader();
+                            getInstance().reconnectReader();
                         } else {
                             Log.d("PaymentIntent", "Reader is still connected.");
                         }
@@ -135,7 +135,7 @@ public class StripeTerminalApplication extends Application {
                         Log.e("PaymentIntent", "Failed to cancel payment method collection", e);
                         // Reconnect to the reader to avoid session loss
                         if (Terminal.getInstance().getConnectedReader() == null) {
-                            MenloVendingManager.getInstance().reconnectReader();
+                            getInstance().reconnectReader();
                         }
                     }
                 });
@@ -165,6 +165,7 @@ public class StripeTerminalApplication extends Application {
         }
     }
 
+
     private static void navigateToPaymentSuccess(double amount) {
         Intent intent = new Intent(ContextHolder.getContext(), PaymentSuccessActivity.class);
         intent.putExtra("PAYMENT_AMOUNT", amount);
@@ -172,9 +173,9 @@ public class StripeTerminalApplication extends Application {
 
         ContextHolder.getContext().startActivity(intent);
     }
-    private static void signalToArduino() throws SerialPortException {
+
+    private static void signalToArduino() {
         Log.d("Arduino", "Signal sent to Arduino");
-        ArduinoHelper ah = new ArduinoHelper();
-        ah.writeData();
+        getInstance().getArduinoHelper().writeData();
     }
 }

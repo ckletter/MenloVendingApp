@@ -38,6 +38,7 @@ public class MenloVendingManager implements DiscoveryListener {
     private PaymentStatus paymentStatus = PaymentStatus.NOT_READY;
     private Cancelable discoverCancelable;
     private MenloVendingState menloVendingState;
+    private ArduinoHelper arduinoHelper;
 
     private MenloVendingManager() {}
 
@@ -48,6 +49,9 @@ public class MenloVendingManager implements DiscoveryListener {
     public MenloVendingState getMenloVendingState() {
         return menloVendingState;
     }
+    public ArduinoHelper getArduinoHelper() {
+        return arduinoHelper; // Provide instance via getter
+    }
 
     public void initialize(Context context) {
         executorService.execute(() -> {
@@ -55,6 +59,8 @@ public class MenloVendingManager implements DiscoveryListener {
             connectionStatus = ConnectionStatus.NOT_CONNECTED;
             paymentStatus = PaymentStatus.NOT_READY;
             if (context != null) {
+                arduinoHelper = new ArduinoHelper(context);
+                arduinoHelper.findAndConnectDevice();
                 try {
                     TerminalEventListener listener = new TerminalEventListener();
                     TokenProvider tokenProvider = new TokenProvider();
@@ -68,10 +74,6 @@ public class MenloVendingManager implements DiscoveryListener {
             }
             discoverReaders();
         });
-    }
-    public void arduinoSignal() throws SerialPortException {
-        ArduinoHelper arduinoHelper = new ArduinoHelper();
-        arduinoHelper.writeData();
     }
     public void onConnectionStatusChange(ConnectionStatus status) {
         System.out.println("Connection status changed to: " + status);

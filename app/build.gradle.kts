@@ -58,6 +58,7 @@ dependencies {
     androidTestImplementation(libs.androidx.core)
     androidTestImplementation(libs.androidx.junit.v114)
     androidTestImplementation(libs.androidx.espresso.core.v350)
+    androidTestImplementation(libs.androidx.runner)
     implementation(libs.jserialcomm)
     implementation(libs.stripeterminal)
     implementation(libs.stripe.java)

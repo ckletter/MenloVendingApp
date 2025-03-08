@@ -11,7 +11,7 @@ import jssc.SerialPortException;
 public class ArduinoHelperTest extends TestCase {
     @Test
     public void test() throws SerialPortException {
-        ArduinoHelper ah = new ArduinoHelper();
-        ah.writeData();
+//        ArduinoHelper ah = new ArduinoHelper();
+//        ah.writeData();
     }
 }

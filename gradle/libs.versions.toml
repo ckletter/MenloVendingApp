@@ -19,6 +19,7 @@ appcompat = "1.7.0"
 lottie = "6.0.0"
 mockitoCore = "4.0.0"
 mockitoInline = "4.0.0"
+runner = "1.6.2"
 sparkCore = "2.9.4"
 sparkpost = "0.28.0"
 stripeAndroid = "21.3.2"
@@ -32,6 +33,7 @@ androidx-core = { module = "androidx.test:core", version.ref = "core" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-espresso-core-v350 = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCoreVersion" }
 androidx-junit-v114 = { module = "androidx.test.ext:junit", version.ref = "androidxJunit" }
+androidx-runner = { module = "androidx.test:runner", version.ref = "runner" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 java-native-jssc = { module = "io.github.java-native:jssc", version.ref = "jsscVersion" }
 jserialcomm = { module = "com.fazecast:jSerialComm", version.ref = "jserialcomm" }

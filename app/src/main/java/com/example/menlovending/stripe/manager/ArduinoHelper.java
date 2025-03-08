@@ -21,8 +21,31 @@ import java.util.List;
 
 public class ArduinoHelper {
     private static final String TAG = "ArduinoHelper";
-    private static final String ACTION_USB_PERMISSION = "com.example.menlovending.USB_PERMISSION";
+    // In your ArduinoHelper class
+    private static final int ARDUINO_VENDOR_ID = 9025; // Replace with your actual VID
+    private static final int ARDUINO_PRODUCT_ID = 4098; // Replace with your actual PID
     private static final int BAUD_RATE = 115200;
+    private static final String ACTION_USB_PERMISSION = "com.example.menlovending.USB_PERMISSION";
+    private final BroadcastReceiver usbPermissionReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (ACTION_USB_PERMISSION.equals(action)) {
+                synchronized (this) {
+                    UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+                    if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
+                        if (device != null) {
+                            // Permission granted, connect to device
+                            connectToDevice(device);
+                            connectionEstablished = true;
+                        }
+                    } else {
+                        Log.d(TAG, "Permission denied for device " + device);
+                    }
+                }
+            }
+        }
+    };
 
     private final Context context;
     private final UsbManager usbManager;
@@ -30,63 +53,50 @@ public class ArduinoHelper {
     private UsbDevice device;
     private boolean connectionEstablished = false;
 
-    // Create pending intent for USB permission
-    private final PendingIntent permissionIntent;
-
-    // USB permission broadcast receiver
-    private final BroadcastReceiver usbPermissionReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (ACTION_USB_PERMISSION.equals(action)) {
-                synchronized (this) {
-                    UsbDevice usbDevice = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-                    if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
-                        if (usbDevice != null) {
-                            // Permission granted, connect to device
-                            connectToDevice(usbDevice);
-                        }
-                    } else {
-                        Log.d(TAG, "Permission denied for device " + usbDevice);
-                    }
-                }
-            }
-        }
-    };
-
     public ArduinoHelper(Context context) {
         this.context = context;
         this.usbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
-
-        // Initialize the permission intent with appropriate flags for your Android version
-        this.permissionIntent = PendingIntent.getBroadcast(context, 0, new Intent(ACTION_USB_PERMISSION),
-                PendingIntent.FLAG_IMMUTABLE);
-
-        // Register receiver for USB permission
-        IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
-        ContextCompat.registerReceiver(context, usbPermissionReceiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED);
+        Log.d(TAG, "Looking for managers...");
+        // Find all available drivers from attached devices
+        List<UsbSerialDriver> availableDrivers = UsbSerialProber.getDefaultProber().findAllDrivers(usbManager);
+        for (UsbSerialDriver driver : availableDrivers) {
+            UsbDevice device = driver.getDevice();
+            Log.d(TAG, "Found device: " + device.getDeviceName() +
+                    " VendorID: " + device.getVendorId() +
+                    " ProductID: " + device.getProductId());
+        }
     }
 
     public boolean findAndConnectDevice() {
         // Find all available drivers from attached devices
         List<UsbSerialDriver> availableDrivers = UsbSerialProber.getDefaultProber().findAllDrivers(usbManager);
 
-        if (availableDrivers.isEmpty()) {
-            Log.d(TAG, "No USB serial devices found");
+        // Reset device to null at the start
+        this.device = null;
+
+        // Log and check for our specific device
+        for (UsbSerialDriver driver : availableDrivers) {
+            UsbDevice device = driver.getDevice();
+
+            if (device.getVendorId() == ARDUINO_VENDOR_ID &&
+                    device.getProductId() == ARDUINO_PRODUCT_ID) {
+                this.device = device;
+                break;  // Exit the loop once we find our device
+            }
+        }
+
+        // Check if we found the device
+        if (this.device == null) {
+            Log.e(TAG, "Arduino device not found");
             return false;
         }
 
-        // Open a connection to the first available driver/device
-        UsbSerialDriver driver = availableDrivers.get(0);
-        device = driver.getDevice();
-
-        // Check if we have permission to access the device
+        // In your findAndConnectDevice method, replace the "No permission" section:
         if (usbManager.hasPermission(device)) {
             return connectToDevice(device);
         } else {
-            // Request permission
-            usbManager.requestPermission(device, permissionIntent);
-            return false; // Connection will be established after permission is granted
+            Log.d(TAG, "Permission already granted in XML");
+            return false;
         }
     }
 
@@ -130,6 +140,7 @@ public class ArduinoHelper {
         }
     }
 
+
     public void writeData() {
         if (!connectionEstablished || serialPort == null) {
             Log.e(TAG, "Not connected to device");
@@ -137,25 +148,10 @@ public class ArduinoHelper {
         }
 
         try {
+            Log.d(TAG, "Writing data to Arduino");
             serialPort.write("DISPENSE\n".getBytes(), 1000);
         } catch (IOException e) {
             Log.e(TAG, "Error writing data: " + e.getMessage());
-        }
-    }
-
-    public String readData() {
-        if (!connectionEstablished || serialPort == null) {
-            Log.e(TAG, "Not connected to device");
-            return null;
-        }
-
-        try {
-            byte[] buffer = new byte[1024];
-            int len = serialPort.read(buffer, 1000);
-            return new String(buffer, 0, len);
-        } catch (IOException e) {
-            Log.e(TAG, "Error reading data: " + e.getMessage());
-            return null;
         }
     }
 
@@ -167,12 +163,6 @@ public class ArduinoHelper {
             } catch (IOException e) {
                 Log.e(TAG, "Error closing connection: " + e.getMessage());
             }
-        }
-
-        try {
-            context.unregisterReceiver(usbPermissionReceiver);
-        } catch (Exception e) {
-            // Ignore if receiver was not registered
         }
     }
 }
