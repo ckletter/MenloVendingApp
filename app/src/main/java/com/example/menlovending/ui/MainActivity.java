@@ -151,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
         connectionCheckRunnable = new Runnable() {
             @Override
             public void run() {
+                checkArduinoConnection();
                 checkReaderConnection();
                 connectionCheckHandler.postDelayed(this, CONNECTION_CHECK_INTERVAL);
             }
@@ -174,6 +175,22 @@ public class MainActivity extends AppCompatActivity {
             // Launch the disconnection activity
             Intent intent = new Intent(MainActivity.this, ReaderDisconnectActivity.class);
             Log.d("MainActivity", "Launching ReaderDisconnectActivity");
+            startActivity(intent);
+        }
+    }
+    private void checkArduinoConnection() {
+        // Get Arduino connection status from MenloVendingManager arduinoHelper
+        boolean isArduinoConnected = MenloVendingManager.getInstance().getArduinoHelper().isConnectionEstablished();
+
+        if (!isArduinoConnected) {
+            // Stop the connection check handler
+            connectionCheckHandler.removeCallbacks(connectionCheckRunnable);
+            // Mark this activity as inactive
+            activityActive = false;
+
+            // Launch the Arduino disconnection activity
+            Intent intent = new Intent(MainActivity.this, ArduinoDisconnectActivity.class);
+            Log.d("MainActivity", "Launching ArduinoDisconnectActivity");
             startActivity(intent);
         }
     }

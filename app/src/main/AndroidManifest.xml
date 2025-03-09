@@ -41,6 +41,9 @@
         <activity
             android:name=".ui.ReaderDisconnectActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.ArduinoDisconnectActivity"
+            android:exported="false" />
 
     </application>
 

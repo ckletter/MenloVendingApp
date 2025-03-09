@@ -35,7 +35,6 @@ import jssc.SerialPortException;
 public class StripeTerminalApplication extends Application {
     private static com.stripe.stripeterminal.external.models.PaymentIntent currentPaymentIntent;
     private static Cancelable collectPaymentMethodCancelable;
-    private ArduinoHelper arduinoHelper;
 
     @Override
     public void onCreate() {
