@@ -138,7 +138,8 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, DollarAmountActivity.class);
             // Pass the dollar amount as an extra
             intent.putExtra("DOLLAR_AMOUNT", dollarAmount);
-
+            // Pass user selection as an extra
+            intent.putExtra("code", enteredCode.toString());
             // Start the new activity
             startActivity(intent);
         }

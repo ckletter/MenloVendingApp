@@ -45,7 +45,7 @@ public class StripeTerminalApplication extends Application {
         TerminalApplicationDelegate.onCreate(this);
     }
 
-    public static void processPayment(double amount) throws StripeException {
+    public static void processPayment(double amount, int code) throws StripeException {
         // Convert from dollars to proper currency
         long amountInCents = (long) (amount * 100);
 
@@ -56,15 +56,15 @@ public class StripeTerminalApplication extends Application {
                 .build();
 
         // Create Payment Intent
-        createPaymentIntent(params);
+        createPaymentIntent(params, code);
     }
 
-    private static void createPaymentIntent(PaymentIntentParameters params) {
+    private static void createPaymentIntent(PaymentIntentParameters params, int code) {
         Terminal.getInstance().createPaymentIntent(params, new PaymentIntentCallback() {
             @Override
             public void onSuccess(@NonNull com.stripe.stripeterminal.external.models.PaymentIntent paymentIntent) {
                 currentPaymentIntent = paymentIntent;
-                collectPaymentMethod(paymentIntent);
+                collectPaymentMethod(paymentIntent, code);
             }
 
             @Override
@@ -74,13 +74,13 @@ public class StripeTerminalApplication extends Application {
         });
     }
 
-    private static void collectPaymentMethod(com.stripe.stripeterminal.external.models.PaymentIntent paymentIntent) {
+    private static void collectPaymentMethod(com.stripe.stripeterminal.external.models.PaymentIntent paymentIntent, int code) {
         collectPaymentMethodCancelable = Terminal.getInstance().collectPaymentMethod(
                 paymentIntent,
                 new PaymentIntentCallback() {
                     @Override
                     public void onSuccess(@NonNull com.stripe.stripeterminal.external.models.PaymentIntent updatedPaymentIntent) {
-                        confirmPaymentIntent(updatedPaymentIntent);
+                        confirmPaymentIntent(updatedPaymentIntent, code);
                     }
 
                     @Override
@@ -91,7 +91,7 @@ public class StripeTerminalApplication extends Application {
         );
     }
 
-    private static void confirmPaymentIntent(com.stripe.stripeterminal.external.models.PaymentIntent paymentIntent) {
+    private static void confirmPaymentIntent(com.stripe.stripeterminal.external.models.PaymentIntent paymentIntent, int code) {
         Terminal.getInstance().confirmPaymentIntent(
                 paymentIntent,
                 new PaymentIntentCallback() {
@@ -99,7 +99,12 @@ public class StripeTerminalApplication extends Application {
                     public void onSuccess(@NonNull com.stripe.stripeterminal.external.models.PaymentIntent confirmedPaymentIntent) {
                         String id = confirmedPaymentIntent.getId();
                         double amount = (double) confirmedPaymentIntent.getAmount() / 100;
-                        signalToArduino();
+                        if (code <= 8) {
+                            signalToArduino();
+                        }
+                        else {
+                            signalToArduino2();
+                        }
                         navigateToPaymentSuccess(amount);
 
                     }
@@ -174,7 +179,11 @@ public class StripeTerminalApplication extends Application {
     }
 
     private static void signalToArduino() {
-        Log.d("Arduino", "Signal sent to Arduino");
+        Log.d("Arduino", "Signal sent to Arduino 1");
         getInstance().getArduinoHelper().writeData();
+    }
+    private static void signalToArduino2() {
+        Log.d("Arduino", "Signal sent to Arduino 2");
+        getInstance().getArduinoHelper2().writeData();
     }
 }

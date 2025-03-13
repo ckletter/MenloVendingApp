@@ -29,6 +29,8 @@ public class DollarAmountActivity extends AppCompatActivity {
         TextView amountTextView = findViewById(R.id.dollar_amount_text_view);
         amountTextView.setText(String.format("$%.2f", dollarAmount));
 
+        int code = getIntent().getIntExtra("code", 0);
+
         // Display tap to pay image
         ImageView imageView = findViewById(R.id.tap_to_pay_image);
         imageView.setImageResource(R.drawable.tap_to_pay);
@@ -42,7 +44,7 @@ public class DollarAmountActivity extends AppCompatActivity {
 
 
         try {
-            StripeTerminalApplication.processPayment(dollarAmount);
+            StripeTerminalApplication.processPayment(dollarAmount, code);
         } catch (StripeException e) {
             throw new RuntimeException(e);
         }
