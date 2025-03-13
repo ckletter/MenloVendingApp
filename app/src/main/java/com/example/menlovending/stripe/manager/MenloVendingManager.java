@@ -37,8 +37,15 @@ public class MenloVendingManager implements DiscoveryListener {
     private ConnectionStatus connectionStatus = ConnectionStatus.NOT_CONNECTED;
     private PaymentStatus paymentStatus = PaymentStatus.NOT_READY;
     private Cancelable discoverCancelable;
+    private static final int ARDUINO1_VENDOR_ID = 9025;
+
+    private static final int ARDUINO1_PRODUCT_ID = 4098;
+    private static final int ARDUINO2_VENDOR_ID = 0;
+
+    private static final int ARDUINO2_PRODUCT_ID = 0;
     private MenloVendingState menloVendingState;
     private ArduinoHelper arduinoHelper;
+    private ArduinoHelper arduinoHelper2;
 
     private MenloVendingManager() {}
 
@@ -52,6 +59,9 @@ public class MenloVendingManager implements DiscoveryListener {
     public ArduinoHelper getArduinoHelper() {
         return arduinoHelper; // Provide instance via getter
     }
+    public ArduinoHelper getArduinoHelper2() {
+        return arduinoHelper2; // Provide instance via getter
+    }
 
     public void initialize(Context context) {
         executorService.execute(() -> {
@@ -59,8 +69,10 @@ public class MenloVendingManager implements DiscoveryListener {
             connectionStatus = ConnectionStatus.NOT_CONNECTED;
             paymentStatus = PaymentStatus.NOT_READY;
             if (context != null) {
-                arduinoHelper = new ArduinoHelper(context);
+                arduinoHelper = new ArduinoHelper(context, ARDUINO1_VENDOR_ID, ARDUINO1_PRODUCT_ID);
+                arduinoHelper2 = new ArduinoHelper(context, ARDUINO2_VENDOR_ID, ARDUINO2_PRODUCT_ID);
                 arduinoHelper.findAndConnectDevice();
+                arduinoHelper2.findAndConnectDevice();
                 try {
                     TerminalEventListener listener = new TerminalEventListener();
                     TokenProvider tokenProvider = new TokenProvider();

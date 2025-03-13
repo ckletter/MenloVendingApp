@@ -1,16 +1,10 @@
 package com.example.menlovending.stripe.manager;
 
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
 import android.util.Log;
-
-import androidx.core.content.ContextCompat;
 
 import com.hoho.android.usbserial.driver.UsbSerialDriver;
 import com.hoho.android.usbserial.driver.UsbSerialPort;
@@ -22,8 +16,8 @@ import java.util.List;
 public class ArduinoHelper {
     private static final String TAG = "ArduinoHelper";
     // In your ArduinoHelper class
-    private static final int ARDUINO_VENDOR_ID = 9025; // Replace with your actual VID
-    private static final int ARDUINO_PRODUCT_ID = 4098; // Replace with your actual PID
+    private static int vendorId;
+    private static int productId;
     private static final int BAUD_RATE = 115200;
 //    private static final String ACTION_USB_PERMISSION = "com.example.menlovending.USB_PERMISSION";
 //    private final BroadcastReceiver usbPermissionReceiver = new BroadcastReceiver() {
@@ -53,8 +47,10 @@ public class ArduinoHelper {
     private UsbDevice device;
     private boolean connectionEstablished = false;
 
-    public ArduinoHelper(Context context) {
+    public ArduinoHelper(Context context, int vendorId, int productId) {
         this.context = context;
+        ArduinoHelper.vendorId = vendorId;
+        ArduinoHelper.productId = productId;
         this.usbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
         Log.d(TAG, "Looking for managers...");
         // Find all available drivers from attached devices
@@ -71,7 +67,7 @@ public class ArduinoHelper {
         return connectionEstablished;
     }
 
-    public boolean findAndConnectDevice() {
+    public void findAndConnectDevice() {
         // Find all available drivers from attached devices
         List<UsbSerialDriver> availableDrivers = UsbSerialProber.getDefaultProber().findAllDrivers(usbManager);
 
@@ -82,8 +78,8 @@ public class ArduinoHelper {
         for (UsbSerialDriver driver : availableDrivers) {
             UsbDevice device = driver.getDevice();
 
-            if (device.getVendorId() == ARDUINO_VENDOR_ID &&
-                    device.getProductId() == ARDUINO_PRODUCT_ID) {
+            if (device.getVendorId() == vendorId &&
+                    device.getProductId() == productId) {
                 this.device = device;
                 break;  // Exit the loop once we find our device
             }
@@ -92,15 +88,14 @@ public class ArduinoHelper {
         // Check if we found the device
         if (this.device == null) {
             Log.e(TAG, "Arduino device not found");
-            return false;
+            return;
         }
 
         // In your findAndConnectDevice method, replace the "No permission" section:
         if (usbManager.hasPermission(device)) {
-            return connectToDevice(device);
+            connectToDevice(device);
         } else {
             Log.d(TAG, "Permission already granted in XML");
-            return false;
         }
     }
 

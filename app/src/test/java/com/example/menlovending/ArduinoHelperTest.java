@@ -1,6 +1,7 @@
 package com.example.menlovending;
 
 import com.example.menlovending.stripe.manager.ArduinoHelper;
+import com.example.menlovending.stripe.manager.ArduinoHelperMac;
 
 import junit.framework.TestCase;
 
@@ -11,7 +12,7 @@ import jssc.SerialPortException;
 public class ArduinoHelperTest extends TestCase {
     @Test
     public void test() throws SerialPortException {
-//        ArduinoHelper ah = new ArduinoHelper();
-//        ah.writeData();
+        ArduinoHelperMac ah = new ArduinoHelperMac();
+        ah.writeData();
     }
 }

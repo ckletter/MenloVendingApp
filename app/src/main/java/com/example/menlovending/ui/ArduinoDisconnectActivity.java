@@ -22,9 +22,10 @@ public class ArduinoDisconnectActivity extends AppCompatActivity {
 
         statusTextView = findViewById(R.id.status_text_view);
 //        retryButton = findViewById(R.id.retry_button);
-
+        int arduino = getIntent().getIntExtra("arduino", 0);
         // Set initial status message
-        statusTextView.setText("Arduino Not Connected");
+        String text = "Arduino " + arduino + " Not Connected";
+        statusTextView.setText(text);
 
         // Setup retry button
 //        retryButton.setOnClickListener(v -> checkArduinoConnection());

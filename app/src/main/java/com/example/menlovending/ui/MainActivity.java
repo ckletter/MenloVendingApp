@@ -179,9 +179,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     private void checkArduinoConnection() {
-        // Get Arduino connection status from MenloVendingManager arduinoHelper
+        // Get Arduino 1 connection status from MenloVendingManager arduinoHelper
         boolean isArduinoConnected = MenloVendingManager.getInstance().getArduinoHelper().isConnectionEstablished();
-
         if (!isArduinoConnected) {
             // Stop the connection check handler
             connectionCheckHandler.removeCallbacks(connectionCheckRunnable);
@@ -191,6 +190,21 @@ public class MainActivity extends AppCompatActivity {
             // Launch the Arduino disconnection activity
             Intent intent = new Intent(MainActivity.this, ArduinoDisconnectActivity.class);
             Log.d("MainActivity", "Launching ArduinoDisconnectActivity");
+            intent.putExtra("arduino", 1);
+            startActivity(intent);
+        }
+        // Get Arduino 2 connection status from MenloVendingManager arduinoHelper
+        boolean isArduino2Connected = MenloVendingManager.getInstance().getArduinoHelper2().isConnectionEstablished();
+        if (!isArduino2Connected) {
+            // Stop the connection check handler
+            connectionCheckHandler.removeCallbacks(connectionCheckRunnable);
+            // Mark this activity as inactive
+            activityActive = false;
+
+            // Launch the Arduino disconnection activity
+            Intent intent = new Intent(MainActivity.this, ArduinoDisconnectActivity.class);
+            Log.d("MainActivity", "Launching ArduinoDisconnectActivity");
+            intent.putExtra("arduino", 2);
             startActivity(intent);
         }
     }
