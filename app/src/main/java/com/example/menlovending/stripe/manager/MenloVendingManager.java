@@ -37,13 +37,11 @@ public class MenloVendingManager implements DiscoveryListener {
     private ConnectionStatus connectionStatus = ConnectionStatus.NOT_CONNECTED;
     private PaymentStatus paymentStatus = PaymentStatus.NOT_READY;
     private Cancelable discoverCancelable;
-    private static final int ARDUINO1_VENDOR_ID = 9025;
-
-    private static final int ARDUINO1_PRODUCT_ID = 4098;
-    private static final int ARDUINO2_VENDOR_ID = 0;
-
-    private static final int ARDUINO2_PRODUCT_ID = 0;
     private MenloVendingState menloVendingState;
+//    private static final String ARDUINO_1_SN = "4827E2E6471C";
+    private static final String ARDUINO_1_NAME = "/dev/bus/usb/001/002";
+    private static final String ARDUINO_2_NAME = "/dev/bus/usb/001/003";
+    private static final String ARDUINO_2_SN = "4827E2E164B0";
     private ArduinoHelper arduinoHelper;
     private ArduinoHelper arduinoHelper2;
 
@@ -69,10 +67,10 @@ public class MenloVendingManager implements DiscoveryListener {
             connectionStatus = ConnectionStatus.NOT_CONNECTED;
             paymentStatus = PaymentStatus.NOT_READY;
             if (context != null) {
-                arduinoHelper = new ArduinoHelper(context, ARDUINO1_VENDOR_ID, ARDUINO1_PRODUCT_ID);
-                arduinoHelper2 = new ArduinoHelper(context, ARDUINO2_VENDOR_ID, ARDUINO2_PRODUCT_ID);
+                arduinoHelper = new ArduinoHelper(context, ARDUINO_1_NAME);
+//                arduinoHelper2 = new ArduinoHelper(context, ARDUINO_2_NAME);
                 arduinoHelper.findAndConnectDevice();
-                arduinoHelper2.findAndConnectDevice();
+//                arduinoHelper2.findAndConnectDevice();
                 try {
                     TerminalEventListener listener = new TerminalEventListener();
                     TokenProvider tokenProvider = new TokenProvider();

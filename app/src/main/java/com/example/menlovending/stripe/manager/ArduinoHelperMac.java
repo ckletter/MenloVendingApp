@@ -11,6 +11,7 @@ public class ArduinoHelperMac {
     SerialPort port;
     public ArduinoHelperMac() throws SerialPortException {
         String[] portNames = SerialPortList.getPortNames();
+
         for (String portName : portNames) {
             System.out.println("Available port: " + portName);
         }
