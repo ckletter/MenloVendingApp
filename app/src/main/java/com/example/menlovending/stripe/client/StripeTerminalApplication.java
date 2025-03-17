@@ -99,12 +99,7 @@ public class StripeTerminalApplication extends Application {
                     public void onSuccess(@NonNull com.stripe.stripeterminal.external.models.PaymentIntent confirmedPaymentIntent) {
                         String id = confirmedPaymentIntent.getId();
                         double amount = (double) confirmedPaymentIntent.getAmount() / 100;
-                        if (code <= 8) {
-                            signalToArduino();
-                        }
-                        else {
-                            signalToArduino2();
-                        }
+                        signalToArduino(code);
                         navigateToPaymentSuccess(amount);
 
                     }
@@ -178,12 +173,15 @@ public class StripeTerminalApplication extends Application {
         ContextHolder.getContext().startActivity(intent);
     }
 
-    private static void signalToArduino() {
-        Log.d("Arduino", "Signal sent to Arduino 1");
-        getInstance().getArduinoHelper().writeData();
-    }
-    private static void signalToArduino2() {
-        Log.d("Arduino", "Signal sent to Arduino 2");
-        getInstance().getArduinoHelper2().writeData();
+    private static void signalToArduino(int code) {
+        if (code <= 8) {
+            Log.d("Arduino", code + " Signal sent to Arduino 1");
+            getInstance().getArduinoHelper().writeData(code);
+        }
+        else {
+            Log.d("Arduino", code + " Signal sent to Arduino 2");
+            getInstance().getArduinoHelper2().writeData(code);
+        }
+
     }
 }
