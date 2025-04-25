@@ -24,7 +24,9 @@ public class MainActivity extends AppCompatActivity {
     private static final int CONNECTION_CHECK_INTERVAL = 3000;
     private Handler connectionCheckHandler = new Handler();
     private Runnable connectionCheckRunnable;
-    private double[] prices = new double[ITEM_COUNT + 1];
+    private double[] prices = new double[45];
+    int[] validItemNums = {11, 12, 13, 14, 21, 22, 23, 24, 31, 32, 33, 34, 41, 42, 43, 44};
+    boolean isValidItem = false;
     // Track if we've already shown disconnect notifications
     private static boolean arduino1DisconnectNotified = false;
     private static boolean arduino2DisconnectNotified = false;
@@ -35,22 +37,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        prices[1] = 0.50;
-        prices[2] = 0.50;
-        prices[3] = 0.50;
-        prices[4] = 0.50;
-        prices[5] = 0.50;
-        prices[6] = 0.50;
-        prices[7] = 0.50;
-        prices[8] = 0.50;
-        prices[9] = 0.50;
-        prices[10] = 0.50;
         prices[11] = 0.50;
         prices[12] = 0.50;
         prices[13] = 0.50;
         prices[14] = 0.50;
-        prices[15] = 0.50;
-        prices[16] = 0.50;
+        prices[21] = 0.50;
+        prices[22] = 0.50;
+        prices[23] = 0.50;
+        prices[24] = 0.50;
+        prices[31] = 0.50;
+        prices[32] = 0.50;
+        prices[33] = 0.50;
+        prices[34] = 0.50;
+        prices[41] = 0.50;
+        prices[42] = 0.50;
+        prices[43] = 0.50;
+        prices[44] = 0.50;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -132,13 +134,32 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View v) {
+            // Did not enter a code
+            if (enteredCode.toString().isEmpty()) {
+                displayTextView.setText("Please enter an Item Number");
+                // Delay clearing the text for 2 seconds
+                new android.os.Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        enteredCode.setLength(0);  // Clear the entered code
+                        updateDisplay();  // Update the display
+                    }
+                }, 2000); // 2000 milliseconds = 2 seconds
+                return;
+            }
             // Get the entered code (dollar amount)
             int itemNum = Integer.parseInt(enteredCode.toString());
-            double dollarAmount;
-            if (itemNum > 0 && itemNum < ITEM_COUNT + 1) {
-                dollarAmount = prices[itemNum];
+            double dollarAmount = 0.0;
+            // Check if the entered item number is in the list of valid numbers
+            for (int validNum : validItemNums) {
+                if (itemNum == validNum) {
+                    isValidItem = true;
+                    dollarAmount = prices[validNum]; // You'll need to adjust your prices array accordingly
+                    break;
+                }
             }
-            else {
+
+            if (!isValidItem) {
                 displayTextView.setText("Invalid Item Number");
                 // Delay clearing the text for 2 seconds
                 new android.os.Handler().postDelayed(new Runnable() {

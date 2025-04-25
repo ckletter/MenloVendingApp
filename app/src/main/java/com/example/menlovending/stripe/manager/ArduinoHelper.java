@@ -48,19 +48,29 @@ public class ArduinoHelper {
     private OutputStream outputStream;
     private InputStream inputStream;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
-    private int[] arduinoTwoCodeMap;
+    private int[] arduinoCodeMap;
 
     public ArduinoHelper(String ARDUINO_IP) {
         this.ARDUINO_IP = ARDUINO_IP;
-        this.arduinoTwoCodeMap = new int[17];
-        this.arduinoTwoCodeMap[16] = 1;
-        this.arduinoTwoCodeMap[15] = 2;
-        this.arduinoTwoCodeMap[14] = 3;
-        this.arduinoTwoCodeMap[13] = 4;
-        this.arduinoTwoCodeMap[12] = 5;
-        this.arduinoTwoCodeMap[11] = 6;
-        this.arduinoTwoCodeMap[10] = 7;
-        this.arduinoTwoCodeMap[9] = 8;
+        this.arduinoCodeMap = new int[45];
+        this.arduinoCodeMap[44] = 1;
+        this.arduinoCodeMap[43] = 2;
+        this.arduinoCodeMap[42] = 3;
+        this.arduinoCodeMap[41] = 4;
+        this.arduinoCodeMap[34] = 5;
+        this.arduinoCodeMap[33] = 6;
+        this.arduinoCodeMap[32] = 7;
+        this.arduinoCodeMap[31] = 8;
+
+        // Arduino 1
+        this.arduinoCodeMap[11] = 1;
+        this.arduinoCodeMap[12] = 2;
+        this.arduinoCodeMap[13] = 3;
+        this.arduinoCodeMap[14] = 4;
+        this.arduinoCodeMap[21] = 5;
+        this.arduinoCodeMap[22] = 6;
+        this.arduinoCodeMap[23] = 7;
+        this.arduinoCodeMap[24] = 8;
     }
 
     public boolean isConnectionEstablished() {
@@ -96,14 +106,7 @@ public class ArduinoHelper {
 
         executorService.execute(() -> {
             try {
-                String message;
-                // Alter the code if necessary to the proper pin if code betweeen 9-16
-                if (code <= 8) {
-                    message = code + "\n";
-                }
-                else {
-                    message = arduinoTwoCodeMap[code] + "\n";
-                }
+                String message = arduinoCodeMap[code] + "\n";
                 outputStream.write(message.getBytes());
                 outputStream.flush();  // Ensure it's sent immediately
                 Log.d(TAG, "Data sent to Arduino: " + message);
