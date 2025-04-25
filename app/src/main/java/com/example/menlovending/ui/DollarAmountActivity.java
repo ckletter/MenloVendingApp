@@ -29,7 +29,7 @@ public class DollarAmountActivity extends AppCompatActivity {
         TextView amountTextView = findViewById(R.id.dollar_amount_text_view);
         amountTextView.setText(String.format("$%.2f", dollarAmount));
 
-        int code = getIntent().getIntExtra("code", 0);
+        int code = getIntent().getIntExtra("code", 1);
 
         // Display tap to pay image
         ImageView imageView = findViewById(R.id.tap_to_pay_image);

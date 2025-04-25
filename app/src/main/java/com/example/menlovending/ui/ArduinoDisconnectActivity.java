@@ -35,14 +35,24 @@ public class ArduinoDisconnectActivity extends AppCompatActivity {
     }
 
     private void startConnectionStatusMonitoring() {
-        // This is a simplified approach. In a real-world scenario,
-        // you might want to use a more robust method like LiveData or a custom Observer
+        int arduinoNum = getIntent().getIntExtra("arduino", 0);
+
         new Thread(() -> {
             while (true) {
-                MenloVendingState currentState = MenloVendingManager.getInstance().getMenloVendingState();
+                // Check the appropriate Arduino connection based on arduino number
+                boolean isArduinoConnected = false;
 
-                if (currentState.getStatus() == MenloVendingState.MenloVendingStatus.READY) {
+                if (arduinoNum == 1) {
+                    isArduinoConnected = MenloVendingManager.getInstance().getArduinoHelper().isConnectionEstablished();
+                } else if (arduinoNum == 2) {
+                    isArduinoConnected = MenloVendingManager.getInstance().getArduinoHelper2().isConnectionEstablished();
+                }
+
+                if (isArduinoConnected) {
                     runOnUiThread(() -> {
+                        // Reset the disconnect notification flag in MainActivity
+                        MainActivity.resetDisconnectFlags();
+
                         // Navigate back to main activity when connection is established
                         Intent intent = new Intent(ArduinoDisconnectActivity.this, MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);

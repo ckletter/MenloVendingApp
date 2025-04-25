@@ -38,10 +38,9 @@ public class MenloVendingManager implements DiscoveryListener {
     private PaymentStatus paymentStatus = PaymentStatus.NOT_READY;
     private Cancelable discoverCancelable;
     private MenloVendingState menloVendingState;
-//    private static final String ARDUINO_1_SN = "4827E2E6471C";
-    private static final String ARDUINO_1_NAME = "/dev/bus/usb/001/002";
-    private static final String ARDUINO_2_NAME = "/dev/bus/usb/001/003";
-    private static final String ARDUINO_2_SN = "4827E2E164B0";
+    private static final String ARDUINO_1_IP = "172.16.0.22"; // Static IP for Arduino 1
+    private static final String ARDUINO_2_IP = "172.16.0.23"; // Static IP for Arduino 2
+
     private ArduinoHelper arduinoHelper;
     private ArduinoHelper arduinoHelper2;
 
@@ -67,10 +66,10 @@ public class MenloVendingManager implements DiscoveryListener {
             connectionStatus = ConnectionStatus.NOT_CONNECTED;
             paymentStatus = PaymentStatus.NOT_READY;
             if (context != null) {
-                arduinoHelper = new ArduinoHelper(context, ARDUINO_1_NAME);
-//                arduinoHelper2 = new ArduinoHelper(context, ARDUINO_2_NAME);
+                arduinoHelper = new ArduinoHelper(ARDUINO_1_IP);
+                arduinoHelper2 = new ArduinoHelper(ARDUINO_2_IP);
                 arduinoHelper.findAndConnectDevice();
-//                arduinoHelper2.findAndConnectDevice();
+                arduinoHelper2.findAndConnectDevice();
                 try {
                     TerminalEventListener listener = new TerminalEventListener();
                     TokenProvider tokenProvider = new TokenProvider();

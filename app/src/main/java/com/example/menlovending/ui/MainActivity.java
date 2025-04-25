@@ -25,6 +25,10 @@ public class MainActivity extends AppCompatActivity {
     private Handler connectionCheckHandler = new Handler();
     private Runnable connectionCheckRunnable;
     private double[] prices = new double[ITEM_COUNT + 1];
+    // Track if we've already shown disconnect notifications
+    private static boolean arduino1DisconnectNotified = false;
+    private static boolean arduino2DisconnectNotified = false;
+    private static boolean readerDisconnectNotified = false;
 
     private boolean activityActive = true; // Track if this activity is active
 
@@ -139,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
             // Pass the dollar amount as an extra
             intent.putExtra("DOLLAR_AMOUNT", dollarAmount);
             // Pass user selection as an extra
-            intent.putExtra("code", enteredCode.toString());
+            intent.putExtra("code", itemNum);
             // Start the new activity
             startActivity(intent);
         }
@@ -162,67 +166,112 @@ public class MainActivity extends AppCompatActivity {
         connectionCheckHandler.post(connectionCheckRunnable);
     }
 
-    private void checkReaderConnection() {
-        MenloVendingState currentState = MenloVendingManager.getInstance().getMenloVendingState();
+    private void checkArduinoConnection() {
+        // Arduino 1 connection check
+        boolean isArduino1Connected = MenloVendingManager.getInstance().getArduinoHelper().isConnectionEstablished();
 
-        if (currentState.getStatus() == MenloVendingState.MenloVendingStatus.ERROR ||
-                currentState.getStatus() == MenloVendingState.MenloVendingStatus.FATAL || currentState.getStatus() == MenloVendingState.MenloVendingStatus.INITIALIZING) {
+        // Only notify if Arduino 1 is disconnected AND we haven't already notified
+        if (!isArduino1Connected && !arduino1DisconnectNotified) {
             // Stop the connection check handler
             connectionCheckHandler.removeCallbacks(connectionCheckRunnable);
             // Mark this activity as inactive
             activityActive = false;
+            // Set the flag to indicate we've notified about this disconnect
+            arduino1DisconnectNotified = true;
 
+            Intent intent = new Intent(MainActivity.this, ArduinoDisconnectActivity.class);
+            Log.d("MainActivity", "Preparing to launch ArduinoDisconnectActivity for Arduino 1");
+            intent.putExtra("arduino", 1);
+            try {
+                startActivity(intent);
+                Log.d("MainActivity", "Started ArduinoDisconnectActivity successfully");
+            } catch (Exception e) {
+                Log.e("MainActivity", "Failed to start ArduinoDisconnectActivity", e);
+            }
+            return; // Return early to prevent checking Arduino 2 in the same cycle
+        }
+        // Reset notification flag if Arduino 1 is connected again
+        else if (isArduino1Connected) {
+            arduino1DisconnectNotified = false;
+        }
+
+        // Arduino 2 connection check - only proceed if we didn't already launch a disconnect activity
+        boolean isArduino2Connected = MenloVendingManager.getInstance().getArduinoHelper2().isConnectionEstablished();
+        if (!isArduino2Connected && !arduino2DisconnectNotified) {
+            // Stop the connection check handler
+            connectionCheckHandler.removeCallbacks(connectionCheckRunnable);
+            // Mark this activity as inactive
+            activityActive = false;
+            // Set the flag to indicate we've notified about this disconnect
+            arduino2DisconnectNotified = true;
+
+            Intent intent = new Intent(MainActivity.this, ArduinoDisconnectActivity.class);
+            Log.d("MainActivity", "Preparing to launch ArduinoDisconnectActivity for Arduino 2");
+            intent.putExtra("arduino", 2);
+            try {
+                startActivity(intent);
+                Log.d("MainActivity", "Started ArduinoDisconnectActivity successfully");
+            } catch (Exception e) {
+                Log.e("MainActivity", "Failed to start ArduinoDisconnectActivity", e);
+            }
+        }
+        // Reset notification flag if Arduino 2 is connected again
+        else if (isArduino2Connected) {
+            arduino2DisconnectNotified = false;
+        }
+    }
+
+    private void checkReaderConnection() {
+        MenloVendingState currentState = MenloVendingManager.getInstance().getMenloVendingState();
+
+        boolean isReaderDisconnected = (currentState.getStatus() == MenloVendingState.MenloVendingStatus.ERROR ||
+                currentState.getStatus() == MenloVendingState.MenloVendingStatus.FATAL ||
+                currentState.getStatus() == MenloVendingState.MenloVendingStatus.INITIALIZING);
+
+        // Only notify if reader is disconnected AND we haven't already notified
+        if (isReaderDisconnected && !readerDisconnectNotified) {
+            // Stop the connection check handler
+            connectionCheckHandler.removeCallbacks(connectionCheckRunnable);
+            // Mark this activity as inactive
+            activityActive = false;
+            // Set the flag to indicate we've notified about this disconnect
+            readerDisconnectNotified = true;
 
             // Launch the disconnection activity
             Intent intent = new Intent(MainActivity.this, ReaderDisconnectActivity.class);
             Log.d("MainActivity", "Launching ReaderDisconnectActivity");
             startActivity(intent);
         }
-    }
-    private void checkArduinoConnection() {
-        // Get Arduino 1 connection status from MenloVendingManager arduinoHelper
-        boolean isArduinoConnected = MenloVendingManager.getInstance().getArduinoHelper().isConnectionEstablished();
-        if (!isArduinoConnected) {
-            // Stop the connection check handler
-            connectionCheckHandler.removeCallbacks(connectionCheckRunnable);
-            // Mark this activity as inactive
-            activityActive = false;
-
-            // Launch the Arduino disconnection activity
-            Intent intent = new Intent(MainActivity.this, ArduinoDisconnectActivity.class);
-            Log.d("MainActivity", "Launching ArduinoDisconnectActivity");
-            intent.putExtra("arduino", 1);
-            startActivity(intent);
+        // Reset notification flag if reader is connected again
+        else if (!isReaderDisconnected) {
+            readerDisconnectNotified = false;
         }
-        // Get Arduino 2 connection status from MenloVendingManager arduinoHelper
-//        boolean isArduino2Connected = MenloVendingManager.getInstance().getArduinoHelper2().isConnectionEstablished();
-//        if (!isArduino2Connected) {
-//            // Stop the connection check handler
-//            connectionCheckHandler.removeCallbacks(connectionCheckRunnable);
-//            // Mark this activity as inactive
-//            activityActive = false;
-//
-//            // Launch the Arduino disconnection activity
-//            Intent intent = new Intent(MainActivity.this, ArduinoDisconnectActivity.class);
-//            Log.d("MainActivity", "Launching ArduinoDisconnectActivity");
-//            intent.putExtra("arduino", 2);
-//            startActivity(intent);
-//        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Reset the activity state
+        activityActive = true;
+
+        // Add a delay before restarting the connection checks
+        // This prevents immediate reconnection attempt after returning from disconnect activity
+        connectionCheckHandler.removeCallbacks(connectionCheckRunnable);
+        connectionCheckHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Only start connection monitoring if we're still active
+                if (activityActive) {
+                    connectionCheckHandler.post(connectionCheckRunnable);
+                }
+            }
+        }, 3000); // 3-second delay
     }
     @Override
     protected void onPause() {
         super.onPause();
         // Temporarily pause checks when activity is not visible
         connectionCheckHandler.removeCallbacks(connectionCheckRunnable);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // Only restart checks if the activity is still considered active
-        if (activityActive) {
-            connectionCheckHandler.post(connectionCheckRunnable);
-        }
     }
     @Override
     protected void onDestroy() {
@@ -231,4 +280,10 @@ public class MainActivity extends AppCompatActivity {
         connectionCheckHandler.removeCallbacks(connectionCheckRunnable);
         super.onDestroy();
     }
+    public static void resetDisconnectFlags() {
+        arduino1DisconnectNotified = false;
+        arduino2DisconnectNotified = false;
+        readerDisconnectNotified = false;
+    }
+
 }

@@ -176,12 +176,19 @@ public class StripeTerminalApplication extends Application {
     private static void signalToArduino(int code) {
         if (code <= 8) {
             Log.d("Arduino", code + " Signal sent to Arduino 1");
-            getInstance().getArduinoHelper().writeData(code);
+            getInstance().getArduinoHelper2().writeData(code);
         }
         else {
             Log.d("Arduino", code + " Signal sent to Arduino 2");
             getInstance().getArduinoHelper2().writeData(code);
         }
 
+    }
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        getInstance().getArduinoHelper().closeConnection();  // Close the socket when the app terminates
+        getInstance().getArduinoHelper2().closeConnection();
+        Log.d("TerminalApplication", "App is terminating. Closing connection.");
     }
 }
