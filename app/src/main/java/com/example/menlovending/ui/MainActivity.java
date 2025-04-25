@@ -36,7 +36,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         prices[1] = 0.50;
-        prices[2] = 1;
+        prices[2] = 0.50;
+        prices[3] = 0.50;
+        prices[4] = 0.50;
+        prices[5] = 0.50;
+        prices[6] = 0.50;
+        prices[7] = 0.50;
+        prices[8] = 0.50;
+        prices[9] = 0.50;
+        prices[10] = 0.50;
+        prices[11] = 0.50;
+        prices[12] = 0.50;
+        prices[13] = 0.50;
+        prices[14] = 0.50;
+        prices[15] = 0.50;
+        prices[16] = 0.50;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 

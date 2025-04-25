@@ -176,7 +176,7 @@ public class StripeTerminalApplication extends Application {
     private static void signalToArduino(int code) {
         if (code <= 8) {
             Log.d("Arduino", code + " Signal sent to Arduino 1");
-            getInstance().getArduinoHelper2().writeData(code);
+            getInstance().getArduinoHelper().writeData(code);
         }
         else {
             Log.d("Arduino", code + " Signal sent to Arduino 2");
