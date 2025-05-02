@@ -37,20 +37,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        prices[11] = 0.50;
-        prices[12] = 0.50;
-        prices[13] = 0.50;
-        prices[14] = 0.50;
+        prices[11] = 2.00;
+        prices[12] = 2.00;
+        prices[13] = 2.00;
+        prices[14] = 3.00;
         prices[21] = 0.50;
         prices[22] = 0.50;
         prices[23] = 0.50;
-        prices[24] = 0.50;
+        prices[24] = 2.00;
         prices[31] = 0.50;
         prices[32] = 0.50;
         prices[33] = 0.50;
         prices[34] = 0.50;
-        prices[41] = 0.50;
-        prices[42] = 0.50;
+        prices[41] = 4.00;
+        prices[42] = 4.00;
         prices[43] = 0.50;
         prices[44] = 0.50;
         super.onCreate(savedInstanceState);
