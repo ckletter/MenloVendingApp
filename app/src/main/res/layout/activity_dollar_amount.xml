@@ -1,19 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
     android:padding="16dp">
-    <!-- ImageView for displaying an image -->
+
     <ImageView
-        android:id="@+id/tap_to_pay_image"
-        android:layout_width="275dp"
-        android:layout_height="275dp"
-        android:src="@drawable/tap_to_pay"
-        android:contentDescription="Tap To Pay"
-        android:scaleType="fitCenter"
-        android:layout_marginBottom="16dp"/>
+        android:id="@+id/down_arrow"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:src="@drawable/down_arrow"
+        android:contentDescription="Pay Below"
+        android:layout_marginBottom="8dp"
+        app:tint="#000000"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/instruction_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tap Card Below"
+        android:textSize="24sp"
+        android:textColor="#000000"
+        android:gravity="center"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone" />
+
     <TextView
         android:id="@+id/dollar_amount_text_view"
         android:layout_width="wrap_content"
@@ -22,17 +36,47 @@
         android:textColor="#000000"
         android:text="0.00"
         android:fontFamily="sans-serif"
-        android:layout_centerInParent="true"/>
-    <Button
-        android:id="@+id/back_button"
+        android:layout_marginBottom="32dp"/>
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="←Back"
-        android:layout_margin="16dp"
-        android:background="?android:attr/selectableItemBackground"
-        android:textSize="24sp"
-        android:padding="8dp"
-        android:textColor="@android:color/black"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"/>
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/confirm_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Confirm"
+            android:textSize="20sp"
+            android:textColor="@android:color/white"
+            android:layout_margin="8dp"
+            android:backgroundTint="#4CAF50"
+            android:padding="12dp"/>
+
+        <Button
+            android:id="@+id/cancel_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:textSize="20sp"
+            android:textColor="@android:color/white"
+            android:layout_margin="8dp"
+            android:backgroundTint="#F44336"
+            android:padding="12dp"/>
+    </LinearLayout>
+
+    <!-- Full width cancel button that appears after confirmation -->
+    <Button
+        android:id="@+id/full_width_cancel_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cancel"
+        android:textSize="20sp"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#F44336"
+        android:padding="12dp"
+        android:visibility="gone" />
 </LinearLayout>

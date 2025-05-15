@@ -81,6 +81,17 @@ public class MenloVendingManager implements DiscoveryListener {
                     return;
                 }
             }
+            // Disconnect from any existing reader first before discovering new readers
+            disconnectReader(() -> {
+                // Only proceed with reader discovery after disconnection completes
+                discoverReaders();
+            });
+        });
+    }
+    public void initializeReader(Context context) {
+        // Disconnect from any existing reader first before discovering new readers
+        disconnectReader(() -> {
+            // Only proceed with reader discovery after disconnection completes
             discoverReaders();
         });
     }
@@ -260,5 +271,62 @@ public class MenloVendingManager implements DiscoveryListener {
     }
     public void fatalStatus(String message, String details) {
         menloVendingState = new MenloVendingState(MenloVendingState.MenloVendingStatus.FATAL, message, details);
+    }
+
+    /**
+     * Disconnects from the currently connected reader
+     * @param onDisconnectComplete Optional callback to run after disconnection completes
+     */
+    public void disconnectReader(Runnable onDisconnectComplete) {
+        if (!Terminal.isInitialized()) {
+            Log.d("VendingManager", "Terminal not initialized, no need to disconnect");
+            if (onDisconnectComplete != null) {
+                onDisconnectComplete.run();
+            }
+            return;
+        }
+
+        ConnectionStatus status = Terminal.getInstance().getConnectionStatus();
+        if (status == ConnectionStatus.CONNECTED) {
+            Log.d("VendingManager", "Disconnecting from reader...");
+            menloVendingState = new MenloVendingState(
+                    MenloVendingState.MenloVendingStatus.INITIALIZING,
+                    "Disconnecting from reader...",
+                    ""
+            );
+
+            Terminal.getInstance().disconnectReader(new Callback() {
+                @Override
+                public void onSuccess() {
+                    Log.d("VendingManager", "Reader disconnected successfully");
+                    connectionStatus = ConnectionStatus.NOT_CONNECTED;
+                    updateStatus();
+                    if (onDisconnectComplete != null) {
+                        onDisconnectComplete.run();
+                    }
+                }
+
+                @Override
+                public void onFailure(TerminalException e) {
+                    Log.e("VendingManager", "Failed to disconnect reader: " + e.getMessage());
+                    // Continue anyway since we want to try to discover readers
+                    if (onDisconnectComplete != null) {
+                        onDisconnectComplete.run();
+                    }
+                }
+            });
+        } else {
+            Log.d("VendingManager", "Reader not connected (status: " + status + "), no need to disconnect");
+            if (onDisconnectComplete != null) {
+                onDisconnectComplete.run();
+            }
+        }
+    }
+
+    /**
+     * Disconnects from the currently connected reader (no callback)
+     */
+    public void disconnectReader() {
+        disconnectReader(null);
     }
 }
